@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <cstdint>
+#include <iostream>
 
 namespace stack
 {
@@ -96,7 +98,7 @@ public:
     void emplace(Args&&... args)
     {
         _reallocateIfNeeded();
-        this->m_Data[m_Size] = T{ std::forward<Args>(args...) };
+        this->m_Data[m_Size] = T{ std::forward<Args...>(args...) };
         m_Size++;
     }
 
