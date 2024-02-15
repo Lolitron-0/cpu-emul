@@ -23,6 +23,8 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
+add_library(${PROJECT_NAME} INTERFACE include/Stack/Stack.hpp)
+
 add_executable(${PROJECT_NAME}_tests tests/tests.cpp)
 target_include_directories(${PROJECT_NAME}_tests PRIVATE include)
 

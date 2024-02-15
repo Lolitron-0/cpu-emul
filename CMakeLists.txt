@@ -18,5 +18,7 @@ set(SOURCES
 
 add_executable (${PROJECT_NAME} ${SOURCES})
 
+
 add_subdirectory(deps/Stack)
 target_include_directories(${PROJECT_NAME} PRIVATE deps/Stack/include)
+target_link_libraries(${PROJECT_NAME} PRIVATE Stack)
