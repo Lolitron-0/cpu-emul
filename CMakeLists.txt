@@ -12,13 +12,23 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	set(CMAKE_CXX_FLAGS --coverage)
+endif()
+
 set(SOURCES 
-	"src/cpu-emul.cpp"
+	src/main.cpp
+	src/Executor.cpp
+	src/FileParser.cpp
+	src/commands/Command.cpp
 )
 
 add_executable (${PROJECT_NAME} ${SOURCES})
 
 
 add_subdirectory(deps/Stack)
-target_include_directories(${PROJECT_NAME} PRIVATE deps/Stack/include)
+target_include_directories(${PROJECT_NAME} PRIVATE deps/Stack/include src)
 target_link_libraries(${PROJECT_NAME} PRIVATE Stack)
+
+find_package(Boost COMPONENTS program_options REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE Boost::program_options)

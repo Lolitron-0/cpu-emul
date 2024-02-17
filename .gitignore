@@ -1,4 +1,5 @@
 build/
+build-qt/
 .vs/
 .cache/
 compile_commands.json

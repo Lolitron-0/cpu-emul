@@ -1,0 +1,1 @@
+cd build-qt/deps/Stack && ./Stack_tests && gcov CMakeFiles/Stack_tests.dir/tests/tests.cpp.gcno && lcov --capture --directory CMakeFiles/Stack_tests.dir/tests --output-file gtest_coverage.info && genhtml gtest_coverage.info --output-directory code_coverage && cd code_coverage && open index.html

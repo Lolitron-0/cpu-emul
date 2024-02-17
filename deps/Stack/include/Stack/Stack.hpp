@@ -1,6 +1,4 @@
 #pragma once
-#include <vector>
-#include <cstdint>
 #include <iostream>
 
 namespace stack
@@ -13,8 +11,6 @@ class Stack
 {
 public:
     using size_type = size_t;
-    static_assert(std::is_copy_constructible<T>::value,
-                  "T must be copy constructible");
 
     Stack()
         : Stack(s_DefaultCapacity)
@@ -33,21 +29,18 @@ public:
     {
         this->m_Data = new T[m_Capacity];
         std::copy(other.m_Data, other.m_Data + other.m_Size, this->m_Data);
-        std::cout << "copy ctor\n";
     }
 
     Stack(Stack&& other) noexcept
         : m_Capacity{}
     {
         swap(*this, other);
-        std::cout << "move ctor\n";
     }
 
     Stack& operator=(Stack other)
     {
         using std::swap;
         swap(*this, other);
-        std::cout << "copy & swap\n";
         return *this;
     }
 
@@ -86,7 +79,8 @@ public:
     template <typename U>
     void push(U&& val)
     {
-        static_assert(std::is_same_v<remove_cv_ref_t<T>, remove_cv_ref_t<U>> || std::is_convertible_v<U, T>,
+        static_assert(std::is_same_v<remove_cv_ref_t<T>, remove_cv_ref_t<U>> ||
+                          std::is_convertible_v<U, T>,
                       "Wrong push type");
 
         _reallocateIfNeeded();
@@ -98,7 +92,7 @@ public:
     void emplace(Args&&... args)
     {
         _reallocateIfNeeded();
-        this->m_Data[m_Size] = T{ std::forward<Args...>(args...) };
+        this->m_Data[m_Size] = T(std::forward<Args>(args)...);
         m_Size++;
     }
 
