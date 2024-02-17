@@ -10,20 +10,29 @@ bool ValidateProgramOptions(const boost::program_options::variables_map& vm)
 
 int main(int argc, char** argv)
 {
+	cpuemul::Executor::GetInstance().LoadFromSource("");
+	return 0;
     namespace opts = boost::program_options;
 
     std::string sourcePath, binaryPath;
 
     opts::options_description optsDescription{ "Allowed opitons" };
-    optsDescription.add_options()("help,h", "display help")(
-        "source,s", opts::value<std::string>(&sourcePath),
-        "specify source code file (note: only one from --binary and --source "
-        "should be specified)")(
-        "binary,b", opts::value<std::string>(&binaryPath),
-        "specify binary file (note: only one from --binary and --source "
-        "should be specified)")(
-        "export-binary,e",
+    std::string oneRequiredNote{
+        "(note: only one from --binary and --source should be specified)"
+    };
+
+    // clang-format off
+    optsDescription.add_options()
+		("help,h", "display help")
+		("source,s", 
+		 opts::value<std::string>(&sourcePath),
+		 ("specify source code file "+oneRequiredNote).c_str())
+		("binary,b",
+		 opts::value<std::string>(&binaryPath),
+        ("specify binary file " + oneRequiredNote).c_str())
+		("export-binary,e",
         "if set, yields binary from source code (--source required)");
+    // clang-format on
 
     opts::variables_map vm;
     opts::store(opts::parse_command_line(argc, argv, optsDescription), vm);

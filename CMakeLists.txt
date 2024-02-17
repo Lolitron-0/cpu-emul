@@ -25,10 +25,13 @@ set(SOURCES
 
 add_executable (${PROJECT_NAME} ${SOURCES})
 
+target_include_directories(${PROJECT_NAME} PRIVATE  src)
 
 add_subdirectory(deps/Stack)
-target_include_directories(${PROJECT_NAME} PRIVATE deps/Stack/include src)
 target_link_libraries(${PROJECT_NAME} PRIVATE Stack)
+
+add_subdirectory(deps/cul)
+target_link_libraries(${PROJECT_NAME} PRIVATE cul)
 
 find_package(Boost COMPONENTS program_options REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE Boost::program_options)

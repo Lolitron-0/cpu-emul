@@ -1,11 +1,7 @@
 #pragma once
 #include "RuntimeContext.hpp"
-#include "Singleton.hpp"
 #include <Stack/Stack.hpp>
-#include <istream>
-#include <memory>
-#include <ostream>
-#include <vector>
+#include <cul/Singleton.hpp>
 
 namespace cpuemul
 {
@@ -17,10 +13,10 @@ public:
 
     void Run();
 
-	void LoadFromSource(const std::string& path);
-	void LoadFromBinary(const std::string& path);
+    void LoadFromSource(const std::string& path);
+    void LoadFromBinary(const std::string& path);
 
-	RuntimeContextPtr GetRuntimeContext() const;
+    RuntimeContextPtr GetRuntimeContext() const;
 
 private:
     RuntimeContextPtr m_RuntimeContextPtr;

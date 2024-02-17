@@ -24,14 +24,16 @@ void Executor::Run()
 
 void Executor::LoadFromSource(const std::string& path)
 {
-    m_RuntimeContextPtr->commands = FileParser::ParseSourceFile(path);
+	std::stringstream errs;
+    m_RuntimeContextPtr->commands = FileParser::ParseSourceFile(path, errs);
     m_RuntimeContextPtr->executionIterator =
         m_RuntimeContextPtr->commands.begin();
 }
 
 void Executor::LoadFromBinary(const std::string& path)
 {
-    m_RuntimeContextPtr->commands = FileParser::ParseBinary(path);
+	std::stringstream errs;
+    m_RuntimeContextPtr->commands = FileParser::ParseBinary(path, errs);
     m_RuntimeContextPtr->executionIterator =
         m_RuntimeContextPtr->commands.begin();
 }
