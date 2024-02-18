@@ -1,4 +1,4 @@
-#include "Command.hpp"
+#include "CommandBase.hpp"
 
 namespace cpuemul
 {

@@ -266,6 +266,25 @@ public:
             .GetResult();
     }
 
+    constexpr std::optional<MappedTypeForT<std::string_view>>
+    FindIgnoreCase(std::string_view value) const noexcept
+    {
+        // xor
+        static_assert(std::is_convertible_v<std::string_view, First> !=
+                          std::is_convertible_v<std::string_view, Second>,
+                      "std::string_view is either not converible to map types "
+                      "or ambiguous");
+
+        if constexpr (std::is_convertible_v<std::string_view, First>)
+        {
+            return FindByFirstIgnoreCase(value);
+        }
+        else
+        {
+            return FindBySecondIgnoreCase(value);
+        }
+    }
+
 private:
     BuilderFunc m_Func;
 };

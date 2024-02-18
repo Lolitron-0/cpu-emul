@@ -1,5 +1,5 @@
 #pragma once
-#include "Command.hpp"
+#include "CommandBase.hpp"
 #include "RuntimeContext.hpp"
 
 namespace cpuemul
@@ -9,6 +9,8 @@ namespace commands
 
 class InCommand final : public CommandBase
 {
+    COMMAND_PROPERTIES(InCommand, 0);
+
 public:
     void Execute() override
     {

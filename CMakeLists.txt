@@ -20,7 +20,7 @@ set(SOURCES
 	src/main.cpp
 	src/Executor.cpp
 	src/FileParser.cpp
-	src/commands/Command.cpp
+	src/commands/CommandBase.cpp
 )
 
 add_executable (${PROJECT_NAME} ${SOURCES})

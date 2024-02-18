@@ -1,5 +1,5 @@
 #pragma once
-#include "Command.hpp"
+#include "CommandBase.hpp"
 #include "RuntimeContext.hpp"
 #include <tuple>
 
@@ -10,6 +10,7 @@ namespace commands
 
 class ArithmeticCommandBase : public CommandBase
 {
+
 protected:
     auto _GetTwoTopStackValues() const
     {

@@ -9,6 +9,8 @@ namespace commands
 
 class SubCommand final : public ArithmeticCommandBase
 {
+    COMMAND_PROPERTIES(SubCommand, 0);
+
 public:
     void Execute() override
     {
