@@ -9,7 +9,7 @@ namespace commands
 
 class MulCommand final : public ArithmeticCommandBase
 {
-    COMMAND_PROPERTIES(MulCommand, 0);
+    COMMAND_PROPERTIES(CommandCode::In, 0);
 
 public:
     void Execute() override

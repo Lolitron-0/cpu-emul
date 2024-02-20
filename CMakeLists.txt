@@ -24,8 +24,9 @@ set(SOURCES
 )
 
 add_executable (${PROJECT_NAME} ${SOURCES})
+target_include_directories(${PROJECT_NAME} PRIVATE src)
 
-target_include_directories(${PROJECT_NAME} PRIVATE  src)
+configure_file(examples/test.pasm examples/test.pasm)
 
 add_subdirectory(deps/Stack)
 target_link_libraries(${PROJECT_NAME} PRIVATE Stack)

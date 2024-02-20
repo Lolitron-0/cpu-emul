@@ -1,12 +1,12 @@
 #pragma once
 #include "RuntimeContext.hpp"
 #include <Stack/Stack.hpp>
-#include <cul/Singleton.hpp>
+#include <cul/cul.hpp>
 
 namespace cpuemul
 {
 
-class Executor : public utils::SingletonMixin<Executor>
+class Executor : public cul::SingletonMixin<Executor>
 {
 public:
     Executor();
@@ -17,6 +17,9 @@ public:
     void LoadFromBinary(const std::string& path);
 
     RuntimeContextPtr GetRuntimeContext() const;
+
+private:
+	void _TryFindBeginCommand();
 
 private:
     RuntimeContextPtr m_RuntimeContextPtr;

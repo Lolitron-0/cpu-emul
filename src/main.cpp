@@ -10,8 +10,9 @@ bool ValidateProgramOptions(const boost::program_options::variables_map& vm)
 
 int main(int argc, char** argv)
 {
-	cpuemul::Executor::GetInstance().LoadFromSource("");
-	return 0;
+	cpuemul::Executor::GetInstance().LoadFromSource("examples/test.pasm");
+    cpuemul::Executor::GetInstance().Run();
+    return 0;
     namespace opts = boost::program_options;
 
     std::string sourcePath, binaryPath;

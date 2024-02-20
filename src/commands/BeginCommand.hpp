@@ -7,16 +7,14 @@ namespace cpuemul
 namespace commands
 {
 
-class InCommand final : public CommandBase
+class BeginCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::In, 0);
+    COMMAND_PROPERTIES(CommandCode::Begin, 0);
 
 public:
     void Execute() override
     {
-        MemoryValueType val;
-        std::cin >> val;
-        _GetRuntimeContextLock()->stack.push(val);
+        _GetRuntimeContextLock()->IsRunning = true;
     }
 };
 

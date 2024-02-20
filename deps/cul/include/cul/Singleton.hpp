@@ -3,10 +3,7 @@
 #include <cassert>
 #include <csignal>
 #include <type_traits>
-namespace cpuemul
-{
-
-namespace utils
+namespace cul
 {
 
 template <class T>
@@ -46,7 +43,9 @@ protected:
     {
         // TODO: assertions
         if (SingletonMixin::s_Instance)
+        {
             raise(SIGTRAP);
+        }
         SingletonMixin::s_Instance = static_cast<T*>(this);
     }
 
@@ -61,5 +60,4 @@ private:
 
 template <class T, template <class> class C>
 T* SingletonMixin<T, C>::s_Instance = nullptr;
-} // namespace utils
-} // namespace cpuemul
+} // namespace cul

@@ -9,7 +9,7 @@ namespace commands
 
 class PopCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(PopCommand, 0);
+    COMMAND_PROPERTIES(CommandCode::Pop, 0);
 
 public:
     void Execute() override

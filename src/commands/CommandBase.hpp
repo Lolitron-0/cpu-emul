@@ -1,8 +1,7 @@
 #pragma once
 #include "RuntimeContext.hpp"
-#include "Stack/Stack.hpp"
-#include <any>
 #include <boost/lexical_cast.hpp>
+#include <cul/cul.hpp>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -14,49 +13,78 @@ namespace cpuemul
 namespace commands
 {
 
-// template <class... ExpectedArgs>
-// class ArgumentException : public std::runtime_error
-// {
-// public:
-//     ArgumentException()
-//         : runtime_error{
-//               "Invalid arguments passed to command. Arguments recieved: " +
-//               ArgumentException::_ConcatTypenames<ExpectedArgs...>() + '\n'
-//           }
-//     {
-//     }
-//
-// private:
-//     template <class... Args>
-//     static std::string _ConcatTypenames()
-//     {
-//         std::string res{ "" };
-//         std::vector<const char*> typeNames = { typeid(Args).name()... };
-//         for (auto typeName : typeNames)
-//         {
-//             res += std::string{ typeName } + ", ";
-//         }
-//         return res;
-//     }
-// };
+enum class CommandCode
+{
+    Begin,
+    End,
+    Push,
+    Pop,
+    Pushr,
+    Popr,
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Out,
+    In,
+    Jmp,
+    Jeq,
+    Jne,
+    Ja,
+    Jae,
+    Jb,
+    Jbe,
+    Call,
+    Ret
+};
 
-#define COMMAND_PROPERTIES(typeName, numArgs, ...)                             \
-public:                                                                        \
-    uint32_t GetArgumentsNumber() const override                               \
-    {                                                                          \
-        return numArgs;                                                        \
-    }                                                                          \
-    // static const typeName& Prototype()                                         \
-    // {                                                                          \
-    //     static typeName proto{ std::make_from_tuple<typeName>(                 \
-    //         _CreateTupleWithDefaultArgs<__VA_ARGS__>()) };                     \
-    //     return proto;                                                          \
-    // }                                                                          \
-                                                                               \
-private:
+// clang-format off
+constexpr cul::BiMap CommandMapping{ 
+	[](auto selector) {
+		return selector
+			.Case("begin", 	commands::CommandCode::Begin)
+			.Case("end", 	commands::CommandCode::End)
+			.Case("push", 	commands::CommandCode::Push)
+			.Case("pop", 	commands::CommandCode::Pop)
+			// .Case("pushr", 	CommandCode::Pushr)
+			// .Case("popr", 	CommandCode::Popr)
+			.Case("add", 	commands::CommandCode::Add)
+			.Case("sub", 	commands::CommandCode::Sub)
+			.Case("mul", 	commands::CommandCode::Mul)
+			.Case("div", 	commands::CommandCode::Div)
+			.Case("out", 	commands::CommandCode::Out)
+			.Case("in", 	commands::CommandCode::In);
+			// .Case("jmp", 	CommandCode::Jmp)
+			// .Case("jeq", 	CommandCode::Jeq)
+			// .Case("jne", 	CommandCode::Jne)
+			// .Case("ja", 	CommandCode::Ja)
+			// .Case("jae", 	CommandCode::Jae)
+			// .Case("jb", 	CommandCode::Jb)
+			// .Case("jbe", 	CommandCode::Jbe)
+			// .Case("call", 	CommandCode::Call)
+			// .Case("ret", 	CommandCode::Ret);
+	} 
+};
+// clang-format on
 
 namespace internal
 {
+
+#define COMMAND_PROPERTIES(code, numArgs, ...)                                 \
+public:                                                                        \
+    constexpr uint32_t GetArgumentsNumber() const override                     \
+    {                                                                          \
+        return numArgs;                                                        \
+    }                                                                          \
+    constexpr CommandCode GetCommandCode() const override                      \
+    {                                                                          \
+        return code;                                                           \
+    }                                                                          \
+    constexpr static inline CommandCode GetTypeCommandCode()                   \
+    {                                                                          \
+        return code;                                                           \
+    }
+
 template <class T, std::enable_if_t<std::is_arithmetic_v<T>, void*> = nullptr>
 T ConstructFromString(const std::string& value)
 {
@@ -65,12 +93,6 @@ T ConstructFromString(const std::string& value)
 
 template <class T, std::enable_if_t<std::is_constructible_v<T, std::string>,
                                     void*> = nullptr>
-T ConstructFromString(const std::string& value)
-{
-    return T{ value };
-}
-
-template <class T, std::enable_if_t<std::is_enum_v<T>, void*> = nullptr>
 T ConstructFromString(const std::string& value)
 {
     return T{ value };
@@ -127,9 +149,11 @@ public:
 
     static void SetRuntimeContext(std::weak_ptr<RuntimeContext>&&);
 
-    virtual void SetArguments(const std::vector<std::string>& list) {}
+    virtual void SetArguments(const std::vector<std::string>& argsVec) {}
 
     virtual uint32_t GetArgumentsNumber() const = 0;
+
+    virtual constexpr CommandCode GetCommandCode() const = 0;
 
 protected:
     template <class... Args>

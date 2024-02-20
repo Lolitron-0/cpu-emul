@@ -22,9 +22,10 @@ using MemoryValueType = int64_t;
 struct RuntimeContext
 {
     using Stack = stack::Stack<MemoryValueType>;
+    bool IsRunning{ false };
 
-    CommandBuffer commands;
-    CommandBufferIterator executionIterator;
+    CommandBuffer Commands;
+    CommandBufferIterator ExecutionIterator;
 
     Stack stack;
     // registers

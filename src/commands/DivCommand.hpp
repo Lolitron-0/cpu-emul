@@ -9,7 +9,7 @@ namespace commands
 
 class DivCommand final : public ArithmeticCommandBase
 {
-    COMMAND_PROPERTIES(DivCommand, 0);
+    COMMAND_PROPERTIES(CommandCode::Div, 0);
 
 public:
     void Execute() override
