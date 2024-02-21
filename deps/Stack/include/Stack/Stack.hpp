@@ -39,7 +39,6 @@ public:
 
     Stack& operator=(Stack other)
     {
-        using std::swap;
         swap(*this, other);
         return *this;
     }
@@ -104,9 +103,10 @@ public:
 private:
     friend void swap(Stack& left, Stack& right) noexcept
     {
-        std::swap(left.m_Data, right.m_Data);
-        std::swap(left.m_Size, right.m_Size);
-        std::swap(left.m_Capacity, right.m_Capacity);
+        using std::swap;
+        swap(left.m_Data, right.m_Data);
+        swap(left.m_Size, right.m_Size);
+        swap(left.m_Capacity, right.m_Capacity);
     }
 
     static constexpr size_type s_DefaultCapacity{ 10 };

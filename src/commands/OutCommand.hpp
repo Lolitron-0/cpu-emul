@@ -15,8 +15,8 @@ public:
     void Execute() override
     {
         auto contextLock{ _GetRuntimeContextLock() };
-        std::cout << contextLock->stack.top() << std::endl;
-        contextLock->stack.pop();
+        std::cout << contextLock->Stack.top() << std::endl;
+        contextLock->Stack.pop();
     }
 };
 

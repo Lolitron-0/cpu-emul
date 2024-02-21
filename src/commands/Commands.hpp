@@ -8,7 +8,9 @@
 #include "MulCommand.hpp"
 #include "OutCommand.hpp"
 #include "PopCommand.hpp"
+#include "PoprCommand.hpp"
 #include "PushCommand.hpp"
+#include "PushrCommand.hpp"
 #include "SubCommand.hpp"
 #include <cul/cul.hpp>
 
@@ -19,7 +21,8 @@ namespace commands
 using Command = CommandBase;
 
 using CommandsTypeList =
-    cul::typelist::TypeList<BeginCommand, EndCommand, AddCommand, SubCommand, MulCommand,
-                  DivCommand, InCommand, OutCommand, PushCommand, PopCommand>;
+    cul::typelist::TypeList<BeginCommand, EndCommand, AddCommand, SubCommand,
+                            MulCommand, DivCommand, InCommand, OutCommand,
+                            PushCommand, PopCommand, PushrCommand, PoprCommand>;
 } // namespace commands
 } // namespace cpuemul

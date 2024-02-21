@@ -14,7 +14,7 @@ class PushCommand final : public CommandBase
 public:
     void Execute() override
     {
-        _GetRuntimeContextLock()->stack.push(m_Value);
+        _GetRuntimeContextLock()->Stack.push(m_Value);
     }
 
     void SetArguments(const std::vector<std::string>& argsVec) override

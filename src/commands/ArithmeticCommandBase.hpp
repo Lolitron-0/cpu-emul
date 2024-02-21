@@ -14,7 +14,7 @@ class ArithmeticCommandBase : public CommandBase
 protected:
     auto _GetTwoTopStackValues() const
     {
-        if (_GetRuntimeContextLock()->stack.size() < 2)
+        if (_GetRuntimeContextLock()->Stack.size() < 2)
         {
             throw std::runtime_error(
                 "Not enough arguments on stack for \"" +
@@ -23,10 +23,10 @@ protected:
                 "\"");
         }
         auto contextLock{ _GetRuntimeContextLock() };
-        auto left = contextLock->stack.top();
-        contextLock->stack.pop();
-        auto right = contextLock->stack.top();
-        contextLock->stack.pop();
+        auto left = contextLock->Stack.top();
+        contextLock->Stack.pop();
+        auto right = contextLock->Stack.top();
+        contextLock->Stack.pop();
         return std::make_tuple(left, right);
     }
 };

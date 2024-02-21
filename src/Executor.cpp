@@ -42,6 +42,7 @@ void Executor::LoadFromSource(const std::string& path)
     if (errs.rdbuf()->in_avail())
     {
         std::cerr << errs.str() << std::endl;
+		return;
     }
     m_RuntimeContextPtr->Commands = std::move(res);
     _TryFindBeginCommand();

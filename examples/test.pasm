@@ -1,6 +1,10 @@
-IN
-Begin
-push 3
 push 2
-ADD
+popr eax 
+push 3
+pushR EAX
+ADD 
 OUT
+
+
+
+

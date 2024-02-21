@@ -40,14 +40,15 @@ enum class CommandCode
 
 // clang-format off
 constexpr cul::BiMap CommandMapping{ 
-	[](auto selector) {
+	[](auto selector) 
+	{
 		return selector
 			.Case("begin", 	commands::CommandCode::Begin)
 			.Case("end", 	commands::CommandCode::End)
 			.Case("push", 	commands::CommandCode::Push)
 			.Case("pop", 	commands::CommandCode::Pop)
-			// .Case("pushr", 	CommandCode::Pushr)
-			// .Case("popr", 	CommandCode::Popr)
+			.Case("pushr", 	commands::CommandCode::Pushr)
+			.Case("popr", 	commands::CommandCode::Popr)
 			.Case("add", 	commands::CommandCode::Add)
 			.Case("sub", 	commands::CommandCode::Sub)
 			.Case("mul", 	commands::CommandCode::Mul)

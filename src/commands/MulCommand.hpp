@@ -15,7 +15,7 @@ public:
     void Execute() override
     {
         auto [op1, op2] = _GetTwoTopStackValues();
-        _GetRuntimeContextLock()->stack.push(op1 * op2);
+        _GetRuntimeContextLock()->Stack.push(op1 * op2);
     }
 };
 
