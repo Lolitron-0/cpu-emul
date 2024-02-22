@@ -7,20 +7,21 @@ namespace cpuemul
 namespace commands
 {
 
-class PushrCommand final : public CommandBase
+class OutrCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Pushr, 1, RegisterName);
+    COMMAND_PROPERTIES(CommandCode::Outr, 1);
 
 public:
-    PushrCommand()
-        : CommandBase{ 1, CommandCode::Pushr }
+    OutrCommand()
+        : CommandBase{ 1, CommandCode::Outr }
     {
     }
 
     void Execute() override
     {
-        auto lock{ _GetRuntimeContextLock() };
-        lock->Stack.push(lock->Registers[static_cast<size_t>(m_Register)]);
+        auto contextLock{ _GetRuntimeContextLock() };
+        std::cout << contextLock->Registers[static_cast<size_t>(m_Register)]
+                  << std::endl;
     }
 
     void SetArguments(const std::vector<std::string>& argsVec) override
@@ -28,12 +29,13 @@ public:
         TRY_RETHROW_CREATION_EXCEPTION(
             {
                 m_Register =
-                    internal::ConstructFromString<RegisterNameFromString>(argsVec[0]).value;
+                    internal::ConstructFromString<RegisterNameFromString>(
+                        argsVec[0])
+                        .value;
             },
             argsVec[0]);
     }
 
-protected:
 private:
     RegisterName m_Register;
 };

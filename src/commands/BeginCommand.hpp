@@ -12,6 +12,11 @@ class BeginCommand final : public CommandBase
     COMMAND_PROPERTIES(CommandCode::Begin, 0);
 
 public:
+    BeginCommand()
+        : CommandBase{ 0, CommandCode::Begin }
+    {
+    }
+
     void Execute() override
     {
         _GetRuntimeContextLock()->IsRunning = true;

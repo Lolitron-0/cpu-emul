@@ -12,6 +12,11 @@ class EndCommand final : public CommandBase
     COMMAND_PROPERTIES(CommandCode::End, 0);
 
 public:
+    EndCommand()
+        : CommandBase{ 0, CommandCode::End }
+    {
+    }
+
     void Execute() override
     {
         _GetRuntimeContextLock()->IsRunning = false;

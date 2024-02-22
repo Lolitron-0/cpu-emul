@@ -1,3 +1,5 @@
+// copyright userver
+
 #pragma once
 #include <cassert>
 #include <csignal>

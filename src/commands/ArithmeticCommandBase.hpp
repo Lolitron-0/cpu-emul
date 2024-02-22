@@ -10,7 +10,8 @@ namespace commands
 
 class ArithmeticCommandBase : public CommandBase
 {
-
+public:
+	using CommandBase::CommandBase;
 protected:
     auto _GetTwoTopStackValues() const
     {

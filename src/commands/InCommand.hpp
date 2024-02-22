@@ -12,6 +12,11 @@ class InCommand final : public CommandBase
     COMMAND_PROPERTIES(CommandCode::In, 0);
 
 public:
+    InCommand()
+        : CommandBase{ 0, CommandCode::In }
+    {
+    }
+
     void Execute() override
     {
         MemoryValueType val;

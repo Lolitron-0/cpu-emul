@@ -12,6 +12,11 @@ class DivCommand final : public ArithmeticCommandBase
     COMMAND_PROPERTIES(CommandCode::Div, 0);
 
 public:
+    DivCommand()
+        : ArithmeticCommandBase{ 0, CommandCode::Div }
+    {
+    }
+
     void Execute() override
     {
         auto [op1, op2] = _GetTwoTopStackValues();

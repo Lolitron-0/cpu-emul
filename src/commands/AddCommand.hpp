@@ -10,7 +10,13 @@ namespace commands
 class AddCommand final : public ArithmeticCommandBase
 {
     COMMAND_PROPERTIES(CommandCode::Add, 0);
+
 public:
+    AddCommand()
+        : ArithmeticCommandBase{ 0, CommandCode::Add }
+    {
+    }
+
     void Execute() override
     {
         auto [op1, op2] = _GetTwoTopStackValues();

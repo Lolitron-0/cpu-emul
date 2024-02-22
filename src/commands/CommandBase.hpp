@@ -26,6 +26,7 @@ enum class CommandCode
     Mul,
     Div,
     Out,
+    Outr,
     In,
     Jmp,
     Jeq,
@@ -54,6 +55,7 @@ constexpr cul::BiMap CommandMapping{
 			.Case("mul", 	commands::CommandCode::Mul)
 			.Case("div", 	commands::CommandCode::Div)
 			.Case("out", 	commands::CommandCode::Out)
+			.Case("outr", 	commands::CommandCode::Outr)
 			.Case("in", 	commands::CommandCode::In);
 			// .Case("jmp", 	CommandCode::Jmp)
 			// .Case("jeq", 	CommandCode::Jeq)
@@ -71,16 +73,8 @@ constexpr cul::BiMap CommandMapping{
 namespace internal
 {
 
-#define COMMAND_PROPERTIES(code, numArgs, ...)                                 \
+#define COMMAND_PROPERTIES(code, ...)                                          \
 public:                                                                        \
-    constexpr uint32_t GetArgumentsNumber() const override                     \
-    {                                                                          \
-        return numArgs;                                                        \
-    }                                                                          \
-    constexpr CommandCode GetCommandCode() const override                      \
-    {                                                                          \
-        return code;                                                           \
-    }                                                                          \
     constexpr static inline CommandCode GetTypeCommandCode()                   \
     {                                                                          \
         return code;                                                           \
@@ -152,11 +146,23 @@ public:
 
     virtual void SetArguments(const std::vector<std::string>& argsVec) {}
 
-    virtual uint32_t GetArgumentsNumber() const = 0;
+    uint32_t GetArgumentsNumber() const
+    {
+        return m_ArgumentsNumber;
+    }
 
-    virtual constexpr CommandCode GetCommandCode() const = 0;
+    CommandCode GetCommandCode() const
+    {
+        return m_CommandCode;
+    }
 
 protected:
+    CommandBase(uint32_t argNum, CommandCode code)
+        : m_ArgumentsNumber{ argNum },
+          m_CommandCode{ code }
+    {
+    }
+
     template <class... Args>
     static constexpr auto _CreateTupleWithDefaultArgs()
     {
@@ -176,6 +182,8 @@ protected:
 
 private:
     static std::weak_ptr<RuntimeContext> s_RuntimeContextPtr;
+    uint32_t m_ArgumentsNumber;
+    CommandCode m_CommandCode;
 };
 
 } // namespace commands

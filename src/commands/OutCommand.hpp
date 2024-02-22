@@ -12,6 +12,11 @@ class OutCommand final : public CommandBase
     COMMAND_PROPERTIES(CommandCode::Out, 0);
 
 public:
+    OutCommand()
+        : CommandBase{ 0, CommandCode::Out }
+    {
+    }
+
     void Execute() override
     {
         auto contextLock{ _GetRuntimeContextLock() };

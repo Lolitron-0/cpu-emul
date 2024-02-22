@@ -12,12 +12,17 @@ class PoprCommand final : public CommandBase
     COMMAND_PROPERTIES(CommandCode::Popr, 1, RegisterName);
 
 public:
+    PoprCommand()
+        : CommandBase{ 1, CommandCode::Popr }
+    {
+    }
+
     void Execute() override
     {
         auto lock{ _GetRuntimeContextLock() };
         if (lock->Stack.empty())
         {
-            throw std::runtime_error{ "Not enough vlaues on stack to popr" };
+            throw std::runtime_error{ "Not enough values on stack to popr" };
         }
         lock->Registers[static_cast<size_t>(m_Register)] = lock->Stack.top();
         lock->Stack.pop();

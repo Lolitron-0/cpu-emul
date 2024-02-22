@@ -12,6 +12,11 @@ class MulCommand final : public ArithmeticCommandBase
     COMMAND_PROPERTIES(CommandCode::In, 0);
 
 public:
+    MulCommand()
+        : ArithmeticCommandBase{ 0, CommandCode::Mul }
+    {
+    }
+
     void Execute() override
     {
         auto [op1, op2] = _GetTwoTopStackValues();

@@ -12,6 +12,11 @@ class PushCommand final : public CommandBase
     COMMAND_PROPERTIES(CommandCode::Push, 1, MemoryValueType);
 
 public:
+    PushCommand()
+        : CommandBase{ 1, CommandCode::Push }
+    {
+    }
+
     void Execute() override
     {
         _GetRuntimeContextLock()->Stack.push(m_Value);
