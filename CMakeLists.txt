@@ -19,6 +19,7 @@ endif()
 set(SOURCES 
 	src/main.cpp
 	src/Executor.cpp
+    src/RuntimeContext.cpp
 	src/FileParser.cpp
 	src/commands/CommandBase.cpp
 )
@@ -27,6 +28,7 @@ add_executable (${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 configure_file(examples/test.pasm examples/test.pasm)
+configure_file(examples/fib_no_cycle.pasm examples/fib_no_cycle.pasm)
 
 add_subdirectory(deps/Stack)
 target_link_libraries(${PROJECT_NAME} PRIVATE Stack)

@@ -9,7 +9,7 @@ namespace commands
 
 class OutCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Out, 0);
+    COMMAND_PROPERTIES(CommandCode::Out);
 
 public:
     OutCommand()

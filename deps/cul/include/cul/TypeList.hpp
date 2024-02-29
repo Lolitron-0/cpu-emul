@@ -131,5 +131,42 @@ public:
     }
 };
 
+template <class TL, template <class T> class StaticFunctor>
+struct ForEachTemplate;
+
+
+template <template <class T> class StaticFunctor>
+struct ForEachTemplate<TypeList<>, StaticFunctor>
+{
+public:
+    template <class... TArgs>
+    static void Iterate(auto&&... args)
+    {
+    }
+};
+
+template <class Last, template <class T> class StaticFunctor>
+struct ForEachTemplate<TypeList<Last>, StaticFunctor>
+{
+public:
+    template <class... TArgs>
+    static void Iterate(auto&&... args)
+    {
+        StaticFunctor<Last>::template Call<TArgs...>(args...);
+    }
+};
+
+template <class Hd, class... Tl, template <class T> class StaticFunctor>
+struct ForEachTemplate<TypeList<Hd, Tl...>, StaticFunctor>
+{
+public:
+    template <class... TArgs>
+    static void Iterate(auto&&... args)
+    {
+        StaticFunctor<Hd>::template Call<TArgs...>(args...);
+        ForEach<TypeList<Tl...>, StaticFunctor>::Iterate(args...);
+    }
+};
+
 } // namespace typelist
 } // namespace cul

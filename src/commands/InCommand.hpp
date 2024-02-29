@@ -9,7 +9,7 @@ namespace commands
 
 class InCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::In, 0);
+    COMMAND_PROPERTIES(CommandCode::In);
 
 public:
     InCommand()

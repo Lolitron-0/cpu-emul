@@ -9,7 +9,7 @@ namespace commands
 
 class EndCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::End, 0);
+    COMMAND_PROPERTIES(CommandCode::End);
 
 public:
     EndCommand()

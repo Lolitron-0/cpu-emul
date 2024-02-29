@@ -41,17 +41,10 @@ constexpr cul::BiMap RegisterNameMapping{
 // clang-format on
 } // namespace internal
 
-struct RegisterNameFromString
+struct RegisterNameWrapper
 {
-    RegisterNameFromString(const std::string& str)
-    {
-        auto opt{internal::RegisterNameMapping.FindIgnoreCase(str)};
-        if (!opt.has_value())
-        {
-            throw std::runtime_error{ "No such register \"" + str + "\"" };
-        }
-        value = opt.value();
-    }
+    RegisterNameWrapper() = default;
+    RegisterNameWrapper(const std::string& str);
     RegisterName value;
 };
 

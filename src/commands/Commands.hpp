@@ -21,10 +21,18 @@ namespace commands
 {
 using Command = CommandBase;
 
-using CommandsTypeList =
-    cul::typelist::TypeList<BeginCommand, EndCommand, AddCommand, SubCommand,
-                            MulCommand, DivCommand, InCommand, OutCommand,
-                            OutrCommand, PushCommand, PopCommand, PushrCommand,
-                            PoprCommand>;
+using CommandsTypeList = cul::typelist::TypeList<BeginCommand,
+                                                 EndCommand,
+                                                 AddCommand,
+                                                 SubCommand,
+                                                 MulCommand,
+                                                 DivCommand,
+                                                 InCommand,
+                                                 OutCommand,
+                                                 OutrCommand,
+                                                 PushCommand,
+                                                 PopCommand,
+                                                 PushrCommand,
+                                                 PoprCommand>;
 } // namespace commands
 } // namespace cpuemul

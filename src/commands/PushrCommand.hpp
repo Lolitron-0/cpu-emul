@@ -9,7 +9,7 @@ namespace commands
 
 class PushrCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Pushr, 1, RegisterName);
+    COMMAND_PROPERTIES(CommandCode::Pushr, RegisterNameWrapper);
 
 public:
     PushrCommand()
@@ -23,17 +23,13 @@ public:
         lock->Stack.push(lock->Registers[static_cast<size_t>(m_Register)]);
     }
 
-    void SetArguments(const std::vector<std::string>& argsVec) override
+protected:
+    void _SetArgumentsImpl(std::any argsTuple) override
     {
-        TRY_RETHROW_CREATION_EXCEPTION(
-            {
-                m_Register =
-                    internal::ConstructFromString<RegisterNameFromString>(argsVec[0]).value;
-            },
-            argsVec[0]);
+        auto args{ std::any_cast<ArgsTupleType>(argsTuple) };
+        m_Register = std::get<0>(args).value;
     }
 
-protected:
 private:
     RegisterName m_Register;
 };

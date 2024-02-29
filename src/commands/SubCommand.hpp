@@ -9,7 +9,7 @@ namespace commands
 
 class SubCommand final : public ArithmeticCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Sub, 0);
+    COMMAND_PROPERTIES(CommandCode::Sub);
 
 public:
     SubCommand()

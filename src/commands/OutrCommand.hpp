@@ -9,7 +9,7 @@ namespace commands
 
 class OutrCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Outr, 1);
+    COMMAND_PROPERTIES(CommandCode::Outr, RegisterNameWrapper);
 
 public:
     OutrCommand()
@@ -23,17 +23,11 @@ public:
         std::cout << contextLock->Registers[static_cast<size_t>(m_Register)]
                   << std::endl;
     }
-
-    void SetArguments(const std::vector<std::string>& argsVec) override
+protected:
+    void _SetArgumentsImpl(std::any argsTuple) override
     {
-        TRY_RETHROW_CREATION_EXCEPTION(
-            {
-                m_Register =
-                    internal::ConstructFromString<RegisterNameFromString>(
-                        argsVec[0])
-                        .value;
-            },
-            argsVec[0]);
+        auto args{ std::any_cast<ArgsTupleType>(argsTuple) };
+        m_Register = std::get<0>(args).value;
     }
 
 private:

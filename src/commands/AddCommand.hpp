@@ -9,7 +9,7 @@ namespace commands
 
 class AddCommand final : public ArithmeticCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Add, 0);
+    COMMAND_PROPERTIES(CommandCode::Add);
 
 public:
     AddCommand()

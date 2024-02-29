@@ -9,7 +9,7 @@ namespace commands
 
 class DivCommand final : public ArithmeticCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Div, 0);
+    COMMAND_PROPERTIES(CommandCode::Div);
 
 public:
     DivCommand()
@@ -20,6 +20,10 @@ public:
     void Execute() override
     {
         auto [op1, op2] = _GetTwoTopStackValues();
+        if (op2 == 0)
+        {
+            throw std::runtime_error{ "Division by zero" };
+        }
         _GetRuntimeContextLock()->Stack.push(op1 / op2);
     }
 };

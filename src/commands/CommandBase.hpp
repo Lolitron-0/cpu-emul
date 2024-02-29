@@ -1,5 +1,6 @@
 #pragma once
 #include "RuntimeContext.hpp"
+#include <any>
 #include <boost/lexical_cast.hpp>
 #include <cul/cul.hpp>
 #include <memory>
@@ -70,81 +71,32 @@ constexpr cul::BiMap CommandMapping{
 };
 // clang-format on
 
-namespace internal
-{
-
 #define COMMAND_PROPERTIES(code, ...)                                          \
 public:                                                                        \
     constexpr static inline CommandCode GetTypeCommandCode()                   \
     {                                                                          \
         return code;                                                           \
-    }
-
-template <class T, std::enable_if_t<std::is_arithmetic_v<T>, void*> = nullptr>
-T ConstructFromString(const std::string& value)
-{
-    return boost::lexical_cast<T>(value);
-}
-
-template <class T, std::enable_if_t<std::is_constructible_v<T, std::string>,
-                                    void*> = nullptr>
-T ConstructFromString(const std::string& value)
-{
-    return T{ value };
-}
-
-template <class T,
-          std::enable_if_t<!std::is_arithmetic_v<T> &&
-                               !std::is_constructible_v<T, std::string>,
-                           void*> = nullptr>
-T ConstructFromString(const std::string& value)
-{
-    throw std::runtime_error{
-        "Virtual memory type is not constructible from string"
-    };
-}
-
-#define TRY_RETHROW_CREATION_EXCEPTION(scope, argStr)                          \
-    try                                                                        \
-    {                                                                          \
-        scope                                                                  \
     }                                                                          \
-    catch (const boost::bad_lexical_cast& e)                                   \
-    {                                                                          \
-        throw std::runtime_error{                                              \
-            "Failed to convert argument value \"" + argStr +                   \
+    using ArgsTypeList = cul::typelist::TypeList<__VA_ARGS__>;                 \
+    using ArgsTupleType = std::tuple<__VA_ARGS__>;                             \
                                                                                \
-            "\" to virtual memory type - basic arithmetic type (" +            \
-            std::string{ typeid(MemoryValueType).name() } + ")"                \
-        };                                                                     \
-    }                                                                          \
-    catch (const std::exception& e)                                            \
-    {                                                                          \
-        throw std::runtime_error{                                              \
-            "Exception while creating a virtual memory object (which is " +    \
-            std::string{ typeid(MemoryValueType).name() } +                    \
-            ") from string \"" + argStr + "\": " + std::string{ e.what() }     \
-        };                                                                     \
-    }                                                                          \
-    catch (...)                                                                \
-    {                                                                          \
-        throw std::runtime_error{                                              \
-            std::string{ "Unknown exception while creating a virtual memory "  \
-                         "object from string \"" } +                           \
-            argStr + std::string{ "\"" }                                       \
-        };                                                                     \
-    }
-
-} // namespace internal
+private:
 
 class CommandBase
 {
 public:
+    virtual ~CommandBase() = default;
     virtual void Execute() = 0;
 
     static void SetRuntimeContext(std::weak_ptr<RuntimeContext>&&);
 
-    virtual void SetArguments(const std::vector<std::string>& argsVec) {}
+    // virtual void SetArguments(const std::vector<std::string>& argsVec) {}
+
+    template <class... Args>
+    void SetArguments(const std::tuple<Args...>& tuple)
+    {
+        _SetArgumentsImpl(std::any{ tuple });
+    }
 
     uint32_t GetArgumentsNumber() const
     {
@@ -162,6 +114,8 @@ protected:
           m_CommandCode{ code }
     {
     }
+
+    virtual void _SetArgumentsImpl(std::any) {}
 
     template <class... Args>
     static constexpr auto _CreateTupleWithDefaultArgs()

@@ -9,7 +9,7 @@ namespace commands
 
 class PushCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Push, 1, MemoryValueType);
+    COMMAND_PROPERTIES(CommandCode::Push, MemoryValueType);
 
 public:
     PushCommand()
@@ -22,17 +22,13 @@ public:
         _GetRuntimeContextLock()->Stack.push(m_Value);
     }
 
-    void SetArguments(const std::vector<std::string>& argsVec) override
+protected:
+    void _SetArgumentsImpl(std::any argsTuple) override
     {
-        TRY_RETHROW_CREATION_EXCEPTION(
-            {
-                m_Value = internal::ConstructFromString<MemoryValueType>(
-                    *argsVec.begin());
-            },
-            *argsVec.begin());
+        auto args{ std::any_cast<ArgsTupleType>(argsTuple) };
+		m_Value = std::get<0>(args);
     }
 
-protected:
 private:
     MemoryValueType m_Value;
 };
