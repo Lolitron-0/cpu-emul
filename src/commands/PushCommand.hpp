@@ -26,7 +26,7 @@ protected:
     void _SetArgumentsImpl(std::any argsTuple) override
     {
         auto args{ std::any_cast<ArgsTupleType>(argsTuple) };
-		m_Value = std::get<0>(args);
+        m_Value = std::get<0>(args);
     }
 
 private:

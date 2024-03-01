@@ -19,7 +19,7 @@ public:
 
     void Execute() override
     {
-        auto [op1, op2] = _GetTwoTopStackValues();
+        auto [op1, op2] = _PopTwoTopStackValues();
         if (op2 == 0)
         {
             throw std::runtime_error{ "Division by zero" };

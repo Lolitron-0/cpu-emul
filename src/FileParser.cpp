@@ -174,18 +174,19 @@ std::string FormattedErrorPlaceInfo(const std::string& file, int32_t line)
 
 } // namespace internal
 
-CommandBuffer FileParser::ParseSourceFile(const std::string& path,
-                                          std::stringstream& errStream)
+std::tuple<CommandBuffer, LabelMap>
+FileParser::ParseSourceFile(const std::string& path,
+                            std::stringstream& errStream)
 {
     std::ifstream sourceFileStream{ path };
-    std::vector<std::string> tokens;
     if (!sourceFileStream.is_open())
     {
         errStream << "File not found: " << path;
         return {};
     }
 
-    CommandBuffer result;
+    CommandBuffer resultCommands;
+    LabelMap resultLabels;
     std::string line, token;
     int32_t lineNumber{ 0 };
     while (std::getline(sourceFileStream, line))
@@ -197,12 +198,25 @@ CommandBuffer FileParser::ParseSourceFile(const std::string& path,
         }
 
         token = internal::StripNextWord(line);
+
+        if (token == "//")
+        {
+            continue;
+        }
+
         auto commandCodeOpt{ commands::CommandMapping.FindIgnoreCase(token) };
         if (!commandCodeOpt.has_value())
         {
+            if (token.size() >= 2 && token.ends_with(':')) // label
+            {
+                resultLabels[token.substr(0, token.size() - 1)] =
+                    resultCommands.size();
+                continue;
+            }
+
             errStream << internal::FormattedErrorPlaceInfo(path, lineNumber)
-                      << "Unknown command : \"" << token << "\"" << std::endl;
-            break;
+                      << "Unknown token : \"" << token << "\"" << std::endl;
+            continue;
         }
         CommandPtr commandPtr;
         cul::typelist::ForEach<commands::CommandsTypeList,
@@ -244,13 +258,13 @@ CommandBuffer FileParser::ParseSourceFile(const std::string& path,
             continue;
         }
 
-        result.push_back(commandPtr);
+        resultCommands.push_back(commandPtr);
 
     stopLineProcessing:;
     }
 
     sourceFileStream.close();
-    return result;
+    return std::make_tuple(resultCommands, resultLabels);
 }
 
 CommandBuffer FileParser::ParseBinary(const std::string& path,

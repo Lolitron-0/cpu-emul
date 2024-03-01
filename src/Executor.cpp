@@ -19,9 +19,13 @@ void Executor::Run()
     {
         try
         {
+            // std::cout << commands::CommandMapping
+            //                  .Find((*m_RuntimeContextPtr->ExecutionIterator)
+            //                            ->GetCommandCode())
+            //                  .value() << std::endl;
             (*m_RuntimeContextPtr->ExecutionIterator)->Execute();
         }
-        catch (const std::exception& e)
+        catch (const std::runtime_error& e)
         {
             std::cerr << e.what() << std::endl;
             std::cerr << "Aborting" << std::endl;
@@ -38,13 +42,14 @@ void Executor::Run()
 void Executor::LoadFromSource(const std::string& path)
 {
     std::stringstream errs;
-    auto res = FileParser::ParseSourceFile(path, errs);
+    auto [commands, labels] = FileParser::ParseSourceFile(path, errs);
     if (errs.rdbuf()->in_avail())
     {
         std::cerr << errs.str() << std::endl;
-		return;
+        return;
     }
-    m_RuntimeContextPtr->Commands = std::move(res);
+    m_RuntimeContextPtr->Commands = std::move(commands);
+    m_RuntimeContextPtr->Labels = std::move(labels);
     _TryFindBeginCommand();
 }
 

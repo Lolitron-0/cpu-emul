@@ -27,8 +27,8 @@ set(SOURCES
 add_executable (${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
-configure_file(examples/test.pasm examples/test.pasm)
-configure_file(examples/fib_no_cycle.pasm examples/fib_no_cycle.pasm)
+configure_file(examples/fib_loop.pasm examples/fib_loop.pasm)
+configure_file(examples/fib_no_loop.pasm examples/fib_no_loop.pasm)
 
 add_subdirectory(deps/Stack)
 target_link_libraries(${PROJECT_NAME} PRIVATE Stack)

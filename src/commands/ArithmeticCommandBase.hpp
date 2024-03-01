@@ -11,17 +11,15 @@ namespace commands
 class ArithmeticCommandBase : public CommandBase
 {
 public:
-	using CommandBase::CommandBase;
+    using CommandBase::CommandBase;
+
 protected:
-    auto _GetTwoTopStackValues() const
+    auto _PopTwoTopStackValues() const
     {
         if (_GetRuntimeContextLock()->Stack.size() < 2)
         {
-            throw std::runtime_error(
-                "Not enough arguments on stack for \"" +
-                std::string{
-                    CommandMapping.Find(this->GetCommandCode()).value() } +
-                "\"");
+            throw std::runtime_error("Not enough arguments on stack for \"" +
+                                     this->GetCommandName() + "\"");
         }
         auto contextLock{ _GetRuntimeContextLock() };
         auto left = contextLock->Stack.top();

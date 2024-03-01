@@ -20,6 +20,10 @@ public:
     void Execute() override
     {
         auto contextLock{ _GetRuntimeContextLock() };
+        if (contextLock->Stack.empty())
+        {
+            throw std::runtime_error{ "Not enough values on stack to out" };
+        }
         std::cout << contextLock->Stack.top() << std::endl;
         contextLock->Stack.pop();
     }

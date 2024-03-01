@@ -19,7 +19,7 @@ public:
 
     void Execute() override
     {
-        auto [op1, op2] = _GetTwoTopStackValues();
+        auto [op1, op2] = _PopTwoTopStackValues();
         _GetRuntimeContextLock()->Stack.push(op1 * op2);
     }
 };

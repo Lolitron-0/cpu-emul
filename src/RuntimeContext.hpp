@@ -3,6 +3,7 @@
 #include <array>
 #include <cul/cul.hpp>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 namespace cpuemul
@@ -54,6 +55,7 @@ using CommandBufferIterator = CommandBuffer::iterator;
 using MemoryValueType = int64_t;
 using RegistersBuffer =
     std::array<MemoryValueType, static_cast<size_t>(RegisterName::_Count)>;
+using LabelMap = std::unordered_map<std::string, size_t>;
 using StackType = stack::Stack<MemoryValueType>;
 
 struct RuntimeContext
@@ -65,7 +67,7 @@ struct RuntimeContext
 
     StackType Stack;
     RegistersBuffer Registers{};
-    // labels
+    LabelMap Labels;
 };
 
 using RuntimeContextPtr = std::shared_ptr<RuntimeContext>;

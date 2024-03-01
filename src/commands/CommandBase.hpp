@@ -57,16 +57,16 @@ constexpr cul::BiMap CommandMapping{
 			.Case("div", 	commands::CommandCode::Div)
 			.Case("out", 	commands::CommandCode::Out)
 			.Case("outr", 	commands::CommandCode::Outr)
-			.Case("in", 	commands::CommandCode::In);
-			// .Case("jmp", 	CommandCode::Jmp)
-			// .Case("jeq", 	CommandCode::Jeq)
-			// .Case("jne", 	CommandCode::Jne)
-			// .Case("ja", 	CommandCode::Ja)
-			// .Case("jae", 	CommandCode::Jae)
-			// .Case("jb", 	CommandCode::Jb)
-			// .Case("jbe", 	CommandCode::Jbe)
-			// .Case("call", 	CommandCode::Call)
-			// .Case("ret", 	CommandCode::Ret);
+			.Case("in", 	commands::CommandCode::In)
+			.Case("jmp", 	commands::CommandCode::Jmp)
+			.Case("jeq", 	commands::CommandCode::Jeq)
+			.Case("jne", 	commands::CommandCode::Jne)
+			.Case("ja", 	commands::CommandCode::Ja)
+			.Case("jae", 	commands::CommandCode::Jae)
+			.Case("jb", 	commands::CommandCode::Jb)
+			.Case("jbe", 	commands::CommandCode::Jbe)
+			.Case("call", 	commands::CommandCode::Call)
+			.Case("ret", 	commands::CommandCode::Ret);
 	} 
 };
 // clang-format on
@@ -106,6 +106,11 @@ public:
     CommandCode GetCommandCode() const
     {
         return m_CommandCode;
+    }
+
+    std::string GetCommandName() const
+    {
+        return std::string{ CommandMapping.Find(GetCommandCode()).value() };
     }
 
 protected:

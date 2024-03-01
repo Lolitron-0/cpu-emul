@@ -23,6 +23,7 @@ public:
         std::cout << contextLock->Registers[static_cast<size_t>(m_Register)]
                   << std::endl;
     }
+
 protected:
     void _SetArgumentsImpl(std::any argsTuple) override
     {
