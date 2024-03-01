@@ -21,6 +21,7 @@
 #include "PushCommand.hpp"
 #include "PushrCommand.hpp"
 #include "RetCommand.hpp"
+#include "SecretCommand.hpp"
 #include "SubCommand.hpp"
 #include <cul/cul.hpp>
 
@@ -34,6 +35,6 @@ using CommandsTypeList = cul::typelist::TypeList<
     BeginCommand, EndCommand, AddCommand, SubCommand, MulCommand, DivCommand,
     InCommand, OutCommand, OutrCommand, PushCommand, PopCommand, PushrCommand,
     PoprCommand, JmpCommand, JeqCommand, JneCommand, JaCommand, JaeCommand,
-    JbCommand, JbeCommand, CallCommand, RetCommand>;
+    JbCommand, JbeCommand, CallCommand, RetCommand, SecretCommand>;
 } // namespace commands
 } // namespace cpuemul

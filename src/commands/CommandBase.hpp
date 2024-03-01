@@ -37,7 +37,8 @@ enum class CommandCode
     Jb,
     Jbe,
     Call,
-    Ret
+    Ret,
+    Secret
 };
 
 // clang-format off
@@ -66,7 +67,8 @@ constexpr cul::BiMap CommandMapping{
 			.Case("jb", 	commands::CommandCode::Jb)
 			.Case("jbe", 	commands::CommandCode::Jbe)
 			.Case("call", 	commands::CommandCode::Call)
-			.Case("ret", 	commands::CommandCode::Ret);
+			.Case("ret", 	commands::CommandCode::Ret)
+			.Case("дружеский_прикол", 	commands::CommandCode::Secret);
 	} 
 };
 // clang-format on
