@@ -1,6 +1,7 @@
 #pragma once
 #include "AddCommand.hpp"
 #include "BeginCommand.hpp"
+#include "CallCommand.hpp"
 #include "CommandBase.hpp"
 #include "DivCommand.hpp"
 #include "EndCommand.hpp"
@@ -19,6 +20,7 @@
 #include "PoprCommand.hpp"
 #include "PushCommand.hpp"
 #include "PushrCommand.hpp"
+#include "RetCommand.hpp"
 #include "SubCommand.hpp"
 #include <cul/cul.hpp>
 
@@ -28,11 +30,10 @@ namespace commands
 {
 using Command = CommandBase;
 
-using CommandsTypeList =
-    cul::typelist::TypeList<BeginCommand, EndCommand, AddCommand, SubCommand,
-                            MulCommand, DivCommand, InCommand, OutCommand,
-                            OutrCommand, PushCommand, PopCommand, PushrCommand,
-                            PoprCommand, JmpCommand, JeqCommand, JneCommand,
-                            JaCommand, JaeCommand, JbCommand, JbeCommand>;
+using CommandsTypeList = cul::typelist::TypeList<
+    BeginCommand, EndCommand, AddCommand, SubCommand, MulCommand, DivCommand,
+    InCommand, OutCommand, OutrCommand, PushCommand, PopCommand, PushrCommand,
+    PoprCommand, JmpCommand, JeqCommand, JneCommand, JaCommand, JaeCommand,
+    JbCommand, JbeCommand, CallCommand, RetCommand>;
 } // namespace commands
 } // namespace cpuemul

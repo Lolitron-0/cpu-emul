@@ -49,14 +49,16 @@ struct RegisterNameWrapper
     RegisterName value;
 };
 
+using MemoryValueType = int64_t;
+
 using CommandPtr = std::shared_ptr<commands::CommandBase>;
 using CommandBuffer = std::vector<CommandPtr>;
 using CommandBufferIterator = CommandBuffer::iterator;
-using MemoryValueType = int64_t;
 using RegistersBuffer =
     std::array<MemoryValueType, static_cast<size_t>(RegisterName::_Count)>;
 using LabelMap = std::unordered_map<std::string, size_t>;
-using StackType = stack::Stack<MemoryValueType>;
+using MemoryStackType = stack::Stack<MemoryValueType>;
+using CallStackType = stack::Stack<uint64_t>;
 
 struct RuntimeContext
 {
@@ -65,7 +67,8 @@ struct RuntimeContext
     CommandBuffer Commands;
     CommandBufferIterator ExecutionIterator;
 
-    StackType Stack;
+    MemoryStackType Stack;
+    CallStackType CallStack;
     RegistersBuffer Registers{};
     LabelMap Labels;
 };

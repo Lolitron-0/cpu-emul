@@ -19,10 +19,9 @@ void Executor::Run()
     {
         try
         {
-            // std::cout << commands::CommandMapping
-            //                  .Find((*m_RuntimeContextPtr->ExecutionIterator)
-            //                            ->GetCommandCode())
-            //                  .value() << std::endl;
+            // std::cout <<
+            // (*m_RuntimeContextPtr->ExecutionIterator)->GetCommandName() <<
+            // std::endl;
             (*m_RuntimeContextPtr->ExecutionIterator)->Execute();
         }
         catch (const std::runtime_error& e)

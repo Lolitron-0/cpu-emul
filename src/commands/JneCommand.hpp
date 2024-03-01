@@ -11,6 +11,11 @@ class JneCommand final : public JmpCommandBase
     COMMAND_PROPERTIES(CommandCode::Jne, std::string);
 
 public:
+    JneCommand()
+        : JmpCommandBase(1, CommandCode::Jne)
+    {
+    }
+
     void Execute() override
     {
         auto [v1, v2] = _GetTwoTopStackValues();

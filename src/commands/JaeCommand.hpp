@@ -11,6 +11,11 @@ class JaeCommand final : public JmpCommandBase
     COMMAND_PROPERTIES(CommandCode::Jae, std::string);
 
 public:
+    JaeCommand()
+        : JmpCommandBase(1, CommandCode::Jae)
+    {
+    }
+
     void Execute() override
     {
         auto [v1, v2] = _GetTwoTopStackValues();

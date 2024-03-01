@@ -11,6 +11,11 @@ class JbCommand final : public JmpCommandBase
     COMMAND_PROPERTIES(CommandCode::Jb, std::string);
 
 public:
+    JbCommand()
+        : JmpCommandBase(1, CommandCode::Jb)
+    {
+    }
+
     void Execute() override
     {
         auto [v1, v2] = _GetTwoTopStackValues();

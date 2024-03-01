@@ -11,6 +11,11 @@ class JaCommand final : public JmpCommandBase
     COMMAND_PROPERTIES(CommandCode::Ja, std::string);
 
 public:
+    JaCommand()
+        : JmpCommandBase(1, CommandCode::Ja)
+    {
+    }
+
     void Execute() override
     {
         auto [v1, v2] = _GetTwoTopStackValues();

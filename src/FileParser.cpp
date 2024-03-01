@@ -20,9 +20,14 @@ std::string StripNextWord(std::string& str)
         str = "";
         return copy;
     }
+    auto lastSpace{ spacePos };
+    while (lastSpace + 1 < str.length() && str[lastSpace + 1] == ' ')
+    {
+        lastSpace++;
+    }
 
     auto token{ str.substr(0, spacePos) };
-    str.erase(0, spacePos + 1);
+    str.erase(0, lastSpace + 1);
     return token;
 }
 

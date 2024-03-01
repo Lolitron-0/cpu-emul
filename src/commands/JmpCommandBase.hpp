@@ -11,10 +11,7 @@ class JmpCommandBase : public CommandBase
 {
 
 public:
-    JmpCommandBase()
-        : CommandBase{ 1, CommandCode::Jmp }
-    {
-    }
+	using CommandBase::CommandBase;
 
     void Execute() override
     {

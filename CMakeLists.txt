@@ -29,6 +29,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 configure_file(examples/fib_loop.pasm examples/fib_loop.pasm)
 configure_file(examples/fib_no_loop.pasm examples/fib_no_loop.pasm)
+configure_file(examples/fib_recursion.pasm examples/fib_recursion.pasm)
+configure_file(examples/factorial_loop.pasm examples/factorial_loop.pasm)
+configure_file(examples/factorial_recursion.pasm examples/factorial_recursion.pasm)
 
 add_subdirectory(deps/Stack)
 target_link_libraries(${PROJECT_NAME} PRIVATE Stack)
