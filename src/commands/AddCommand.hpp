@@ -9,7 +9,15 @@ namespace commands
 
 class AddCommand final : public ArithmeticCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Add);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Add;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Add;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<>;
+    using ArgsTupleType = std ::tuple<>;
 
 public:
     AddCommand()

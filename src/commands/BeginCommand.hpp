@@ -9,7 +9,15 @@ namespace commands
 
 class BeginCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Begin)
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Begin;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Begin;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<>;
+    using ArgsTupleType = std ::tuple<>;
 
 public:
     BeginCommand()

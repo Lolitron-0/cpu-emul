@@ -8,7 +8,15 @@ namespace commands
 
 class JbCommand final : public JmpCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Jb, decltype(m_Label));
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Jb;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Jb;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<decltype(m_Label)>;
+    using ArgsTupleType = std ::tuple<decltype(m_Label)>;
 
 public:
     JbCommand()

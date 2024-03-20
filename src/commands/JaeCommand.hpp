@@ -8,7 +8,15 @@ namespace commands
 
 class JaeCommand final : public JmpCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Jae, decltype(m_Label));
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Jae;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Jae;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<decltype(m_Label)>;
+    using ArgsTupleType = std ::tuple<decltype(m_Label)>;
 
 public:
     JaeCommand()

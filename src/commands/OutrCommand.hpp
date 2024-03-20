@@ -9,7 +9,15 @@ namespace commands
 
 class OutrCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Outr, RegisterNameWrapper);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Outr;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Outr;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<RegisterNameWrapper>;
+    using ArgsTupleType = std ::tuple<RegisterNameWrapper>;
 
 public:
     OutrCommand()

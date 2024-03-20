@@ -9,7 +9,16 @@ namespace commands
 
 class EndCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::End);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::End;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::End;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<>;
+    using ArgsTupleType = std ::tuple<>;
+    ;
 
 public:
     EndCommand()

@@ -9,7 +9,15 @@ namespace commands
 
 class PoprCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Popr, RegisterNameWrapper);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Popr;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Popr;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<RegisterNameWrapper>;
+    using ArgsTupleType = std ::tuple<RegisterNameWrapper>;
 
 public:
     PoprCommand()

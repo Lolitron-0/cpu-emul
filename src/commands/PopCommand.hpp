@@ -9,7 +9,15 @@ namespace commands
 
 class PopCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Pop);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Pop;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Pop;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<>;
+    using ArgsTupleType = std ::tuple<>;
 
 public:
     PopCommand()

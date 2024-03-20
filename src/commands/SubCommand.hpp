@@ -9,7 +9,15 @@ namespace commands
 
 class SubCommand final : public ArithmeticCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Sub);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Sub;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Sub;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<>;
+    using ArgsTupleType = std ::tuple<>;
 
 public:
     SubCommand()

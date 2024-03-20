@@ -9,7 +9,16 @@ namespace commands
 
 class DivCommand final : public ArithmeticCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Div);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Div;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Div;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<>;
+    using ArgsTupleType = std ::tuple<>;
+    ;
 
 public:
     DivCommand()

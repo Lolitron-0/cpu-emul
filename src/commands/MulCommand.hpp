@@ -9,7 +9,15 @@ namespace commands
 
 class MulCommand final : public ArithmeticCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Mul);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Mul;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Mul;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<>;
+    using ArgsTupleType = std ::tuple<>;
 
 public:
     MulCommand()

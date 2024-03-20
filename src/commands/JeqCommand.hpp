@@ -8,7 +8,15 @@ namespace commands
 
 class JeqCommand final : public JmpCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Jeq, decltype(m_Label));
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Jeq;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Jeq;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<decltype(m_Label)>;
+    using ArgsTupleType = std ::tuple<decltype(m_Label)>;
 
 public:
     JeqCommand()

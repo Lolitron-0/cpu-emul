@@ -9,7 +9,15 @@ namespace commands
 
 class PushrCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Pushr, RegisterNameWrapper);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Pushr;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Pushr;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<RegisterNameWrapper>;
+    using ArgsTupleType = std ::tuple<RegisterNameWrapper>;
 
 public:
     PushrCommand()

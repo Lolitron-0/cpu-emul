@@ -9,11 +9,19 @@ namespace commands
 
 class InCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::In);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::In;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::In;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<>;
+    using ArgsTupleType = std ::tuple<>;
 
 public:
     InCommand()
-        : CommandBase{ 0}
+        : CommandBase{ 0 }
     {
     }
 

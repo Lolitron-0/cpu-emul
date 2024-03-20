@@ -9,7 +9,15 @@ namespace commands
 
 class OutCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Out);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Out;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Out;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<>;
+    using ArgsTupleType = std ::tuple<>;
 
 public:
     OutCommand()

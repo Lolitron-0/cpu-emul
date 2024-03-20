@@ -8,7 +8,15 @@ namespace commands
 
 class CallCommand final : public JmpCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Call, LabelTag)
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Call;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Call;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<LabelTag>;
+    using ArgsTupleType = std ::tuple<LabelTag>;
 
 public:
     CallCommand()

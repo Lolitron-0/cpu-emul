@@ -9,7 +9,15 @@ namespace commands
 
 class SecretCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Secret);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Secret;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Secret;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<>;
+    using ArgsTupleType = std ::tuple<>;
 
 public:
     SecretCommand()

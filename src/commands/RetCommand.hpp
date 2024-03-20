@@ -8,7 +8,15 @@ namespace commands
 
 class RetCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Ret);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Ret;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Ret;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<>;
+    using ArgsTupleType = std ::tuple<>;
 
 public:
     RetCommand()

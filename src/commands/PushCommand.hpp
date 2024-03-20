@@ -9,7 +9,15 @@ namespace commands
 
 class PushCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Push, MemoryValueType);
+
+public:
+    static constexpr CommandCode Code = CommandCode ::Push;
+    inline CommandCode GetCommandCode() const override
+    {
+        return CommandCode ::Push;
+    }
+    using ArgsTypeList = cul ::typelist ::TypeList<MemoryValueType>;
+    using ArgsTupleType = std ::tuple<MemoryValueType>;
 
 public:
     PushCommand()
