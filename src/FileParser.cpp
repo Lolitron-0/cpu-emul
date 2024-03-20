@@ -440,6 +440,10 @@ CommandBuffer FileParser::ParseSourceFile(const std::string& path,
         token = internal::StripNextWord(line);
 
         auto commandCodeOpt{ commands::CommandMapping.FindIgnoreCase(token) };
+        if (!commandCodeOpt.has_value()) // label
+        {
+            continue;
+        }
         CommandPtr commandPtr;
         cul::typelist::ForEach<commands::CommandsTypeList,
                                internal::CreateCommandFromCodeVisitor>::
