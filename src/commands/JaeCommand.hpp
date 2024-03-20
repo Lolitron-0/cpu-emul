@@ -8,11 +8,11 @@ namespace commands
 
 class JaeCommand final : public JmpCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Jae, std::string);
+    COMMAND_PROPERTIES(CommandCode::Jae, decltype(m_Label));
 
 public:
     JaeCommand()
-        : JmpCommandBase(1, CommandCode::Jae)
+        : JmpCommandBase(1)
     {
     }
 
@@ -25,9 +25,6 @@ public:
             JmpCommandBase::Execute();
         }
     }
-
-private:
-    std::string m_Label;
 };
 
 } // namespace commands

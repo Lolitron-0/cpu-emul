@@ -20,7 +20,7 @@ void Executor::Run()
         try
         {
             // std::cout <<
-            // (*m_RuntimeContextPtr->ExecutionIterator)->GetCommandName() <<
+            // (int32_t)(*m_RuntimeContextPtr->ExecutionIterator)->GetCommandCode() <<
             // std::endl;
             (*m_RuntimeContextPtr->ExecutionIterator)->Execute();
         }
@@ -48,16 +48,33 @@ void Executor::LoadFromSource(const std::string& path)
         return;
     }
     m_RuntimeContextPtr->Commands = std::move(commands);
-    m_RuntimeContextPtr->Labels = std::move(labels);
+    // m_RuntimeContextPtr->Labels = std::move(labels);
     _TryFindBeginCommand();
 }
 
 void Executor::LoadFromBinary(const std::string& path)
 {
     std::stringstream errs;
-    m_RuntimeContextPtr->Commands = FileParser::ParseBinary(path, errs);
-    m_RuntimeContextPtr->ExecutionIterator =
-        m_RuntimeContextPtr->Commands.begin();
+    auto [commands, labels] = FileParser::ParseBinary(path, errs);
+    if (errs.rdbuf()->in_avail())
+    {
+        std::cerr << errs.str() << std::endl;
+        return;
+    }
+    m_RuntimeContextPtr->Commands = std::move(commands);
+    // m_RuntimeContextPtr->Labels = std::move(labels);
+    _TryFindBeginCommand();
+}
+void Executor::ExportToBinary(const std::string& sourcePath,
+                              const std::string& outPath)
+{
+    std::stringstream errs;
+    FileParser::ParseSourceFile(sourcePath, errs, outPath);
+    if (errs.rdbuf()->in_avail())
+    {
+        std::cerr << errs.str() << std::endl;
+        return;
+    }
 }
 
 RuntimeContextPtr Executor::GetRuntimeContext() const
@@ -69,7 +86,8 @@ void Executor::_TryFindBeginCommand()
 {
     m_RuntimeContextPtr->ExecutionIterator = std::find_if(
         m_RuntimeContextPtr->Commands.begin(),
-        m_RuntimeContextPtr->Commands.end(), [](const auto& command)
+        m_RuntimeContextPtr->Commands.end(),
+        [](const auto& command)
         { return command->GetCommandCode() == commands::CommandCode::Begin; });
     if (m_RuntimeContextPtr->ExecutionIterator ==
         m_RuntimeContextPtr->Commands.end())

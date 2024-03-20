@@ -13,7 +13,7 @@ class AddCommand final : public ArithmeticCommandBase
 
 public:
     AddCommand()
-        : ArithmeticCommandBase{ 0, CommandCode::Add }
+        : ArithmeticCommandBase{ 0}
     {
     }
 

@@ -13,7 +13,7 @@ class EndCommand final : public CommandBase
 
 public:
     EndCommand()
-        : CommandBase{ 0, CommandCode::End }
+        : CommandBase{ 0 }
     {
     }
 

@@ -107,6 +107,17 @@ struct Contains<T, TypeList<Args...>>
 template <class TL, template <class T> class StaticFunctor>
 struct ForEach;
 
+
+template <template <class T> class StaticFunctor>
+struct ForEach<TypeList<>, StaticFunctor>
+{
+public:
+    template <class... TArgs>
+    static void Iterate(auto&&... args)
+    {
+    }
+};
+
 template <class Last, template <class T> class StaticFunctor>
 struct ForEach<TypeList<Last>, StaticFunctor>
 {

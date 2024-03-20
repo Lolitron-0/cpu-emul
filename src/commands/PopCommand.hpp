@@ -13,7 +13,7 @@ class PopCommand final : public CommandBase
 
 public:
     PopCommand()
-        : CommandBase{ 0, CommandCode::Pop }
+        : CommandBase{ 0 }
     {
     }
 

@@ -49,6 +49,18 @@ struct RegisterNameWrapper
     RegisterName value;
 };
 
+struct LabelTag
+{
+    LabelTag() = default;
+    LabelTag(std::string s)
+        : value{ Mapping.at(s) }
+    {
+    }
+    size_t value;
+
+    static std::unordered_map<std::string, size_t> Mapping;
+};
+
 using MemoryValueType = int64_t;
 
 using CommandPtr = std::shared_ptr<commands::CommandBase>;
@@ -56,7 +68,7 @@ using CommandBuffer = std::vector<CommandPtr>;
 using CommandBufferIterator = CommandBuffer::iterator;
 using RegistersBuffer =
     std::array<MemoryValueType, static_cast<size_t>(RegisterName::_Count)>;
-using LabelMap = std::unordered_map<std::string, size_t>;
+using LabelMap = std::unordered_map<int32_t, size_t>;
 using MemoryStackType = stack::Stack<MemoryValueType>;
 using CallStackType = stack::Stack<uint64_t>;
 
@@ -70,7 +82,6 @@ struct RuntimeContext
     MemoryStackType Stack;
     CallStackType CallStack;
     RegistersBuffer Registers{};
-    LabelMap Labels;
 };
 
 using RuntimeContextPtr = std::shared_ptr<RuntimeContext>;

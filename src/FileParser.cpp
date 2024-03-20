@@ -36,9 +36,21 @@ struct CreateCommandFromCodeVisitor
 {
     static void Call(commands::CommandCode code, CommandPtr& result)
     {
-        if (T::GetTypeCommandCode() == code)
+        if (T::Code == code)
         {
             result = std::make_shared<T>();
+        }
+    }
+};
+
+template <class T>
+struct ArgNumFromCodeVisitor
+{
+    static void Call(commands::CommandCode code, uint32_t& result)
+    {
+        if (T::Code == code)
+        {
+            // result = T::;
         }
     }
 };
@@ -160,13 +172,151 @@ struct ParseArgumentsVisitor
     static void Call(commands::CommandCode code, const CommandPtr& obj,
                      const std::vector<std::string>& args)
     {
-        if (T::GetTypeCommandCode() == code)
+        if (T::Code == code)
         {
             int32_t index{ 0 };
             typename T::ArgsTupleType tuple;
             cul::typelist::ForEachTemplate<typename T::ArgsTypeList,
                                            ParseSingleArgumentVisitor>::
                 template Iterate<typename T::ArgsTupleType>(tuple, args, index);
+            obj->SetArguments(tuple);
+        }
+    }
+};
+
+/////////////////////////////////////////////
+
+template <class T>
+void Serialize(std::fstream& out, T);
+
+template <class T>
+void Serialize(
+    std::fstream& out,
+    std::enable_if_t<std::is_arithmetic_v<T> || std::is_enum_v<T>, T> obj)
+{
+    out.write(reinterpret_cast<char*>(&obj), sizeof(obj));
+}
+
+template <>
+void Serialize<std::string>(std::fstream& out, std::string str)
+{
+    auto size{ str.size() };
+    out.write(reinterpret_cast<char*>(&size), sizeof(size));
+    out.write(str.c_str(), size);
+}
+
+template <>
+void Serialize<RegisterNameWrapper>(std::fstream& out, RegisterNameWrapper reg)
+{
+    out.write(reinterpret_cast<char*>(&reg.value), sizeof(reg.value));
+}
+
+template <>
+void Serialize<LabelTag>(std::fstream& out, LabelTag reg)
+{
+    out.write(reinterpret_cast<char*>(&reg.value), sizeof(reg.value));
+}
+
+template <class ArgType>
+struct SerializeSingleArgumentVisitor
+{
+    static void Call(std::fstream& out, const std::vector<std::string>& args,
+                     int32_t& index)
+    {
+        // noexcept
+        auto v = ConstructFromString<ArgType>(args[index]);
+        Serialize<ArgType>(out, v);
+        index++;
+    }
+};
+
+template <class T>
+struct SerializeArgumentsVisitor
+{
+    static void Call(commands::CommandCode code, std::fstream& out,
+                     const std::vector<std::string>& args)
+    {
+        if (T::Code == code)
+        {
+            int32_t index{ 0 };
+            cul::typelist::ForEach<
+                typename T::ArgsTypeList,
+                SerializeSingleArgumentVisitor>::Iterate(out, args, index);
+        }
+    }
+};
+
+////////////////////////////////////
+
+template <class T>
+std::enable_if_t<!std::is_arithmetic_v<T> && !std::is_enum_v<T>, T>
+Deserialize(std::fstream& out);
+
+template <class T>
+std::enable_if_t<std::is_arithmetic_v<T> || std::is_enum_v<T>, T>
+Deserialize(std::fstream& out)
+{
+    T obj;
+    out.read(reinterpret_cast<char*>(&obj), sizeof(obj));
+    return obj;
+}
+
+template <>
+std::string Deserialize<std::string>(std::fstream& out)
+{
+    size_t size;
+    std::string str;
+    str.resize(size);
+    out.read(reinterpret_cast<char*>(&size), sizeof(size));
+    char* buf = new char[size + 1];
+    out.read(buf, size);
+    buf[size] = '\0';
+    str = buf;
+    delete[] buf;
+    return str;
+}
+
+template <>
+RegisterNameWrapper Deserialize<RegisterNameWrapper>(std::fstream& out)
+{
+    RegisterNameWrapper reg;
+    out.read(reinterpret_cast<char*>(&reg.value), sizeof(reg.value));
+    return reg;
+}
+
+template <>
+LabelTag Deserialize<LabelTag>(std::fstream& out)
+{
+    LabelTag tag;
+    out.read(reinterpret_cast<char*>(&tag.value), sizeof(tag.value));
+    return tag;
+}
+
+template <class ArgType>
+struct DeserializeSingleArgumentVisitor
+{
+    template <class Tuple>
+    static void Call(Tuple& t, std::fstream& bin, int32_t& index)
+    {
+        RuntimeGet(t, index,
+                   [&bin, index](auto& v) { v = Deserialize<ArgType>(bin); });
+        index++;
+    }
+};
+
+template <class T>
+struct DeserializeArgumentVisitor
+{
+    static void Call(commands::CommandCode code, const CommandPtr& obj,
+                     std::fstream& bin)
+    {
+        if (T::Code == code)
+        {
+            int32_t index{ 0 };
+            typename T::ArgsTupleType tuple;
+            cul::typelist::ForEachTemplate<typename T::ArgsTypeList,
+                                           DeserializeSingleArgumentVisitor>::
+                template Iterate<typename T::ArgsTupleType>(tuple, bin, index);
             obj->SetArguments(tuple);
         }
     }
@@ -179,23 +329,25 @@ std::string FormattedErrorPlaceInfo(const std::string& file, int32_t line)
 
 } // namespace internal
 
-std::tuple<CommandBuffer, LabelMap>
-FileParser::ParseSourceFile(const std::string& path,
+std::vector<std::string>
+FileParser::CleanSourceFile(const std::string& path,
                             std::stringstream& errStream)
 {
+    std::vector<std::string> result{};
+
     std::ifstream sourceFileStream{ path };
     if (!sourceFileStream.is_open())
     {
         errStream << "File not found: " << path;
-        return {};
+        return result;
     }
 
-    CommandBuffer resultCommands;
-    LabelMap resultLabels;
-    std::string line, token;
     int32_t lineNumber{ 0 };
+    std::string line, lineCopy, token;
+    int32_t commandIdx{ 0 };
     while (std::getline(sourceFileStream, line))
     {
+        lineCopy = line;
         lineNumber++;
         if (line.empty())
         {
@@ -214,8 +366,9 @@ FileParser::ParseSourceFile(const std::string& path,
         {
             if (token.size() >= 2 && token.ends_with(':')) // label
             {
-                resultLabels[token.substr(0, token.size() - 1)] =
-                    resultCommands.size();
+                result.push_back(token);
+                LabelTag::Mapping[token.substr(0, token.size() - 1)] =
+                    commandIdx;
                 continue;
             }
 
@@ -223,6 +376,7 @@ FileParser::ParseSourceFile(const std::string& path,
                       << "Unknown token : \"" << token << "\"" << std::endl;
             continue;
         }
+        // TODO: no creation foreach
         CommandPtr commandPtr;
         cul::typelist::ForEach<commands::CommandsTypeList,
                                internal::CreateCommandFromCodeVisitor>::
@@ -249,33 +403,140 @@ FileParser::ParseSourceFile(const std::string& path,
             continue;
         }
 
+        result.push_back(lineCopy);
+        commandIdx++;
+    stopLineProcessing:;
+    }
+
+    sourceFileStream.close();
+    return result;
+}
+
+std::tuple<CommandBuffer, LabelMap>
+FileParser::ParseSourceFile(const std::string& path,
+                            std::stringstream& errStream,
+                            const std::string& binaryExportPath)
+{
+    CommandBuffer resultCommands;
+    LabelMap resultLabels;
+    std::string token;
+    int32_t lineNumber{ 0 };
+    auto lines{ CleanSourceFile(path, errStream) };
+    if (errStream.rdbuf()->in_avail())
+    {
+        return {};
+    }
+
+    bool shouldExport{ !binaryExportPath.empty() };
+    std::fstream binaryFileStream;
+
+    if (shouldExport)
+    {
+        binaryFileStream.open(binaryExportPath,
+                              std::ios::out | std::ios::binary);
+    }
+
+    for (auto& line : lines)
+    {
+        lineNumber++;
+        token = internal::StripNextWord(line);
+
+        auto commandCodeOpt{ commands::CommandMapping.FindIgnoreCase(token) };
+        if (!commandCodeOpt.has_value()) // label
+        {
+            resultLabels[atoi(token.substr(0, token.size() - 1).c_str())] =
+                resultCommands.size();
+            continue;
+        }
+        CommandPtr commandPtr;
+        cul::typelist::ForEach<commands::CommandsTypeList,
+                               internal::CreateCommandFromCodeVisitor>::
+            Iterate(commandCodeOpt.value(), commandPtr);
+
+        std::vector<std::string> args;
+        for (int32_t i{ 0 }; i < commandPtr->GetArgumentsNumber(); i++)
+        {
+            args.push_back(internal::StripNextWord(line));
+        }
+
         try
         {
             cul::typelist::ForEach<commands::CommandsTypeList,
                                    internal::ParseArgumentsVisitor>::
                 Iterate(commandCodeOpt.value(), commandPtr, args);
+            if (shouldExport)
+            {
+                auto commandCode{ commandPtr->GetCommandCode() };
+                binaryFileStream.write(reinterpret_cast<char*>(&commandCode),
+                                       sizeof(commandCode));
+                cul::typelist::ForEach<commands::CommandsTypeList,
+                                       internal::SerializeArgumentsVisitor>::
+                    Iterate(commandCodeOpt.value(), binaryFileStream, args);
+            }
         }
         catch (const ArgumentConstructionException& e)
         {
             errStream << internal::FormattedErrorPlaceInfo(path, lineNumber)
                       << e.what() << std::endl;
-            std::shared_ptr<int> a;
             continue;
         }
 
         resultCommands.push_back(commandPtr);
-
-    stopLineProcessing:;
     }
 
-    sourceFileStream.close();
+    if (shouldExport)
+    {
+        // for (auto pair : resultLabels)
+        // {
+        //     int8_t labelToken{ -1 };
+        //     binaryFileStream.write(reinterpret_cast<char*>(&labelToken),
+        //                            sizeof(labelToken));
+        //     binaryFileStream.write(reinterpret_cast<const
+        //     char*>(&pair.first),
+        //                            sizeof(pair.first));
+        //     binaryFileStream.write(reinterpret_cast<const
+        //     char*>(&pair.second),
+        //                            sizeof(pair.second));
+        // }
+        binaryFileStream.close();
+    }
     return std::make_tuple(resultCommands, resultLabels);
 }
 
-CommandBuffer FileParser::ParseBinary(const std::string& path,
-                                      std::stringstream& errStream)
+std::tuple<CommandBuffer, LabelMap>
+FileParser::ParseBinary(const std::string& path, std::stringstream& errStream)
 {
-    throw std::logic_error{ "not implemented" };
+    CommandBuffer resultCommands;
+    LabelMap resultLabels;
+    std::fstream binaryFileStream;
+    binaryFileStream.open(path, std::ios::in | std::ios::binary);
+    while (binaryFileStream.rdbuf()->in_avail())
+    {
+        int8_t code;
+        binaryFileStream.read(reinterpret_cast<char*>(&code), sizeof(code));
+        //      if (code == -1) // label
+        //      {
+        //          LabelMap::key_type labelNum;
+        //          binaryFileStream.read(reinterpret_cast<char*>(&labelNum),
+        //                                 sizeof(labelNum));
+        //          LabelMap::mapped_type labelPos;
+        //          binaryFileStream.read(reinterpret_cast<char*>(&labelPos),
+        //                                 sizeof(labelPos));
+        //          resultLabels[labelNum] = labelPos;
+        // continue;
+        //      }
+        CommandPtr commandPtr;
+        cul::typelist::ForEach<commands::CommandsTypeList,
+                               internal::CreateCommandFromCodeVisitor>::
+            Iterate(static_cast<commands::CommandCode>(code), commandPtr);
+        cul::typelist::ForEach<commands::CommandsTypeList,
+                               internal::DeserializeArgumentVisitor>::
+            Iterate(static_cast<commands::CommandCode>(code), commandPtr,
+                    binaryFileStream);
+        resultCommands.push_back(commandPtr);
+    }
+    binaryFileStream.close();
+    return std::make_pair(resultCommands, resultLabels);
 }
 
 } // namespace cpuemul

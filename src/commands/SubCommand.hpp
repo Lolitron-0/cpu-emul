@@ -13,7 +13,7 @@ class SubCommand final : public ArithmeticCommandBase
 
 public:
     SubCommand()
-        : ArithmeticCommandBase{ 0, CommandCode::Sub }
+        : ArithmeticCommandBase{ 0 }
     {
     }
 

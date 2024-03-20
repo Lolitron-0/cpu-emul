@@ -13,7 +13,7 @@ class MulCommand final : public ArithmeticCommandBase
 
 public:
     MulCommand()
-        : ArithmeticCommandBase{ 0, CommandCode::Mul }
+        : ArithmeticCommandBase{ 0}
     {
     }
 

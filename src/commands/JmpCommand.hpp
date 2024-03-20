@@ -8,11 +8,11 @@ namespace commands
 
 class JmpCommand final : public JmpCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Jmp, std::string);
+    COMMAND_PROPERTIES(CommandCode::Jmp, decltype(m_Label));
 
 public:
     JmpCommand()
-        : JmpCommandBase(1, CommandCode::Jmp)
+        : JmpCommandBase(1)
     {
     }
 
@@ -20,9 +20,6 @@ public:
     {
         JmpCommandBase::Execute();
     }
-
-private:
-    std::string m_Label;
 };
 
 } // namespace commands

@@ -13,7 +13,7 @@ class PushCommand final : public CommandBase
 
 public:
     PushCommand()
-        : CommandBase{ 1, CommandCode::Push }
+        : CommandBase{ 1}
     {
     }
 

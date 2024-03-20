@@ -10,9 +10,11 @@ bool ValidateProgramOptions(const boost::program_options::variables_map& vm)
 
 int main(int argc, char** argv)
 {
-	// cpuemul::Executor::GetInstance().LoadFromSource("examples/test.pasm");
- //    cpuemul::Executor::GetInstance().Run();
- //    return 0;
+    //    cpuemul::Executor::GetInstance().ExportToBinary("examples/fib_loop.pasm",
+    //                                                    "out.bin");
+    // cpuemul::Executor::GetInstance().LoadFromBinary("./out.bin");
+    //    cpuemul::Executor::GetInstance().Run();
+    //    return 0;
     namespace opts = boost::program_options;
 
     std::string sourcePath, binaryPath;
@@ -32,6 +34,7 @@ int main(int argc, char** argv)
 		 opts::value<std::string>(&binaryPath),
         ("specify binary file " + oneRequiredNote).c_str())
 		("export-binary,e",
+		 opts::value<std::string>(&binaryPath),
         "if set, yields binary from source code (--source required)");
     // clang-format on
 
@@ -55,12 +58,17 @@ int main(int argc, char** argv)
     if (vm.contains("binary"))
     {
         cpuemul::Executor::GetInstance().LoadFromBinary(binaryPath);
+        cpuemul::Executor::GetInstance().Run();
+    }
+    else if (vm.contains("export-binary"))
+    {
+        cpuemul::Executor::GetInstance().ExportToBinary(sourcePath, binaryPath);
     }
     else
     {
         cpuemul::Executor::GetInstance().LoadFromSource(sourcePath);
+        cpuemul::Executor::GetInstance().Run();
     }
 
-    cpuemul::Executor::GetInstance().Run();
     return 0;
 }

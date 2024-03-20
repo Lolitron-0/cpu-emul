@@ -15,6 +15,7 @@ public:
 
     void LoadFromSource(const std::string& path);
     void LoadFromBinary(const std::string& path);
+    void ExportToBinary(const std::string& sourcePath, const std::string& outPath);
 
     RuntimeContextPtr GetRuntimeContext() const;
 

@@ -13,7 +13,7 @@ class DivCommand final : public ArithmeticCommandBase
 
 public:
     DivCommand()
-        : ArithmeticCommandBase{ 0, CommandCode::Div }
+        : ArithmeticCommandBase{ 0}
     {
     }
 

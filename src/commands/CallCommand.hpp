@@ -8,11 +8,11 @@ namespace commands
 
 class CallCommand final : public JmpCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Call, std::string);
+    COMMAND_PROPERTIES(CommandCode::Call, LabelTag)
 
 public:
     CallCommand()
-        : JmpCommandBase(1, CommandCode::Call)
+        : JmpCommandBase(1)
     {
     }
 

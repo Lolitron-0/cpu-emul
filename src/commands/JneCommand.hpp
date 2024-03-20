@@ -8,11 +8,11 @@ namespace commands
 
 class JneCommand final : public JmpCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Jne, std::string);
+    COMMAND_PROPERTIES(CommandCode::Jne, decltype(m_Label));
 
 public:
     JneCommand()
-        : JmpCommandBase(1, CommandCode::Jne)
+        : JmpCommandBase(1)
     {
     }
 
@@ -27,7 +27,6 @@ public:
     }
 
 private:
-    std::string m_Label;
 };
 
 } // namespace commands

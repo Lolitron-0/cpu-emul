@@ -13,7 +13,7 @@ class InCommand final : public CommandBase
 
 public:
     InCommand()
-        : CommandBase{ 0, CommandCode::In }
+        : CommandBase{ 0}
     {
     }
 

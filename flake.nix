@@ -1,24 +1,22 @@
 {
-  description = "cpu-emul env";
+  description = "C++ Development with Nix in 2023";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem
-      (system:
-        let pkgs = nixpkgs.legacyPackages.${system};
-        in
-        {
-          devShells.default = pkgs.mkShell {
-            packages = with pkgs; [
-              boost
-              cmake
-              python3
-            ];
-          };
-        }
-      );
+  outputs = inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
+        "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin"
+      ];
+      perSystem = { config, self', inputs', pkgs, system, ... }: {
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            boost
+            cmake
+          ];
+        };
+      };
+    };
 }

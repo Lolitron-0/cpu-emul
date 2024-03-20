@@ -11,28 +11,26 @@ class JmpCommandBase : public CommandBase
 {
 
 public:
-	using CommandBase::CommandBase;
+    using CommandBase::CommandBase;
 
     void Execute() override
     {
         auto lock{ _GetRuntimeContextLock() };
         try
         {
-            auto labelIdx{ lock->Labels.at(m_Label) };
             lock->ExecutionIterator =
-                lock->Commands.begin() + std::max(0ul, labelIdx - 1);
+                lock->Commands.begin() + std::max(0ul, m_Label.value - 1);
         }
         catch (const std::out_of_range& e)
         {
-            throw std::runtime_error{ "Unknown label: \"" + m_Label +
-                                      "\" in \"" + this->GetCommandName() };
+            throw std::runtime_error{ "Unknown label: in jump command" };
         }
     }
 
 protected:
     void _SetArgumentsImpl(std::any argsTuple) override
     {
-        auto args{ std::any_cast<std::tuple<std::string>>(argsTuple) };
+        auto args{ std::any_cast<std::tuple<LabelTag>>(argsTuple) };
         m_Label = std::get<0>(args);
     }
 
@@ -40,9 +38,8 @@ protected:
     {
         if (_GetRuntimeContextLock()->Stack.size() < 2)
         {
-            throw std::runtime_error("Not enough arguments on stack for \"" +
-
-                                     this->GetCommandName() + "\"");
+            throw std::runtime_error(
+                "Not enough arguments on stack for jump comparison");
         }
         auto contextLock{ _GetRuntimeContextLock() };
         auto left = contextLock->Stack.top();
@@ -52,8 +49,8 @@ protected:
         return std::make_tuple(left, right);
     }
 
-private:
-    std::string m_Label;
+protected:
+    LabelTag m_Label;
 };
 
 } // namespace commands

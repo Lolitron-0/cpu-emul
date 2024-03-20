@@ -12,7 +12,7 @@ class RetCommand final : public CommandBase
 
 public:
     RetCommand()
-        : CommandBase(0, CommandCode::Ret)
+        : CommandBase(0)
     {
     }
 

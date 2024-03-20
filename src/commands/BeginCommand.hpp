@@ -9,11 +9,11 @@ namespace commands
 
 class BeginCommand final : public CommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Begin);
+    COMMAND_PROPERTIES(CommandCode::Begin)
 
 public:
     BeginCommand()
-        : CommandBase{ 0, CommandCode::Begin }
+        : CommandBase{ 0 }
     {
     }
 

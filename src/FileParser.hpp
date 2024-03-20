@@ -19,10 +19,14 @@ class FileParser
 {
 public:
     static std::tuple<CommandBuffer, LabelMap>
-    ParseSourceFile(const std::string& path, std::stringstream& errStream);
+    ParseSourceFile(const std::string& path, std::stringstream& errStream,
+                    const std::string& binaryExportPath = "");
 
-    static CommandBuffer ParseBinary(const std::string& path,
-                                     std::stringstream& errStream);
+    static std::tuple<CommandBuffer, LabelMap>
+    ParseBinary(const std::string& path, std::stringstream& errStream);
+
+    static std::vector<std::string>
+    CleanSourceFile(const std::string& path, std::stringstream& errStream);
 };
 
 } // namespace cpuemul

@@ -8,11 +8,11 @@ namespace commands
 
 class JbeCommand final : public JmpCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Jbe, std::string);
+    COMMAND_PROPERTIES(CommandCode::Jbe, decltype(m_Label));
 
 public:
     JbeCommand()
-        : JmpCommandBase(1, CommandCode::Jbe)
+        : JmpCommandBase(1)
     {
     }
 
@@ -25,9 +25,6 @@ public:
             JmpCommandBase::Execute();
         }
     }
-
-private:
-    std::string m_Label;
 };
 
 } // namespace commands

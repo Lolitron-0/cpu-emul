@@ -13,7 +13,7 @@ class SecretCommand final : public CommandBase
 
 public:
     SecretCommand()
-        : CommandBase{ 0, CommandCode::Secret }
+        : CommandBase{ 0}
     {
     }
 

@@ -14,7 +14,7 @@ namespace cpuemul
 namespace commands
 {
 
-enum class CommandCode
+enum class CommandCode : int8_t
 {
     Begin,
     End,
@@ -75,14 +75,14 @@ constexpr cul::BiMap CommandMapping{
 
 #define COMMAND_PROPERTIES(code, ...)                                          \
 public:                                                                        \
-    constexpr static inline CommandCode GetTypeCommandCode()                   \
+    static constexpr CommandCode Code = code;                                  \
+    inline CommandCode GetCommandCode() const override                         \
     {                                                                          \
         return code;                                                           \
     }                                                                          \
-    using ArgsTypeList = cul::typelist::TypeList<__VA_ARGS__>;                 \
-    using ArgsTupleType = std::tuple<__VA_ARGS__>;                             \
                                                                                \
-private:
+    using ArgsTypeList = cul::typelist::TypeList<__VA_ARGS__>;                 \
+    using ArgsTupleType = std::tuple<__VA_ARGS__>;
 
 class CommandBase
 {
@@ -105,30 +105,18 @@ public:
         return m_ArgumentsNumber;
     }
 
-    CommandCode GetCommandCode() const
+    virtual CommandCode GetCommandCode() const
     {
-        return m_CommandCode;
-    }
-
-    std::string GetCommandName() const
-    {
-        return std::string{ CommandMapping.Find(GetCommandCode()).value() };
+        return CommandCode::Add;
     }
 
 protected:
-    CommandBase(uint32_t argNum, CommandCode code)
-        : m_ArgumentsNumber{ argNum },
-          m_CommandCode{ code }
+    CommandBase(uint32_t argNum)
+        : m_ArgumentsNumber{ argNum }
     {
     }
 
     virtual void _SetArgumentsImpl(std::any) {}
-
-    template <class... Args>
-    static constexpr auto _CreateTupleWithDefaultArgs()
-    {
-        return std::tuple<Args...>{};
-    }
 
     // TODO: to cpp
     static inline RuntimeContextPtr _GetRuntimeContextLock()
@@ -144,8 +132,13 @@ protected:
 private:
     static std::weak_ptr<RuntimeContext> s_RuntimeContextPtr;
     uint32_t m_ArgumentsNumber;
-    CommandCode m_CommandCode;
 };
+
+template <class T>
+std::string ToString(T&& command)
+{
+    return std::string{ CommandMapping.Find(command.CommandCode) };
+}
 
 } // namespace commands
 

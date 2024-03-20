@@ -13,7 +13,7 @@ class OutrCommand final : public CommandBase
 
 public:
     OutrCommand()
-        : CommandBase{ 1, CommandCode::Outr }
+        : CommandBase{ 1}
     {
     }
 

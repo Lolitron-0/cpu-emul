@@ -13,7 +13,7 @@ class PoprCommand final : public CommandBase
 
 public:
     PoprCommand()
-        : CommandBase{ 1, CommandCode::Popr }
+        : CommandBase{ 1}
     {
     }
 

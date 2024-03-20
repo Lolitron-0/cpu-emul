@@ -8,11 +8,11 @@ namespace commands
 
 class JaCommand final : public JmpCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Ja, std::string);
+    COMMAND_PROPERTIES(CommandCode::Ja, decltype(m_Label));
 
 public:
     JaCommand()
-        : JmpCommandBase(1, CommandCode::Ja)
+        : JmpCommandBase(1)
     {
     }
 
@@ -25,9 +25,6 @@ public:
             JmpCommandBase::Execute();
         }
     }
-
-private:
-    std::string m_Label;
 };
 
 } // namespace commands

@@ -18,8 +18,7 @@ protected:
     {
         if (_GetRuntimeContextLock()->Stack.size() < 2)
         {
-            throw std::runtime_error("Not enough arguments on stack for \"" +
-                                     this->GetCommandName() + "\"");
+            throw std::runtime_error("Not enough arguments on stack for arithmetics");
         }
         auto contextLock{ _GetRuntimeContextLock() };
         auto left = contextLock->Stack.top();

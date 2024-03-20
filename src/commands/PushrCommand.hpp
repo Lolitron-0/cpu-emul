@@ -13,7 +13,7 @@ class PushrCommand final : public CommandBase
 
 public:
     PushrCommand()
-        : CommandBase{ 1, CommandCode::Pushr }
+        : CommandBase{ 1}
     {
     }
 

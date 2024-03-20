@@ -4,7 +4,7 @@ set -e
 
 mkdir -p build
 
-nix flake update
+#nix flake update
 #nix develop
 
 

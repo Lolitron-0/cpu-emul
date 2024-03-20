@@ -13,7 +13,7 @@ class OutCommand final : public CommandBase
 
 public:
     OutCommand()
-        : CommandBase{ 0, CommandCode::Out }
+        : CommandBase{ 0 }
     {
     }
 

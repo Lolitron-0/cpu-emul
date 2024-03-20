@@ -8,11 +8,11 @@ namespace commands
 
 class JeqCommand final : public JmpCommandBase
 {
-    COMMAND_PROPERTIES(CommandCode::Jeq, std::string);
+    COMMAND_PROPERTIES(CommandCode::Jeq, decltype(m_Label));
 
 public:
     JeqCommand()
-        : JmpCommandBase(1, CommandCode::Jeq)
+        : JmpCommandBase(1)
     {
     }
 
@@ -25,9 +25,6 @@ public:
             JmpCommandBase::Execute();
         }
     }
-
-private:
-    std::string m_Label;
 };
 
 } // namespace commands

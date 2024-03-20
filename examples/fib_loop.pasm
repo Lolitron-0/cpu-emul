@@ -34,4 +34,3 @@ add
 // condition
 jb A
 
-дружеский_прикол
