@@ -20,8 +20,8 @@ void Executor::Run()
         try
         {
             // std::cout <<
-            // (int32_t)(*m_RuntimeContextPtr->ExecutionIterator)->GetCommandCode() <<
-            // std::endl;
+            // (int32_t)(*m_RuntimeContextPtr->ExecutionIterator)->GetCommandCode()
+            // << std::endl;
             (*m_RuntimeContextPtr->ExecutionIterator)->Execute();
         }
         catch (const std::runtime_error& e)
@@ -41,28 +41,26 @@ void Executor::Run()
 void Executor::LoadFromSource(const std::string& path)
 {
     std::stringstream errs;
-    auto [commands, labels] = FileParser::ParseSourceFile(path, errs);
+    auto commands{ FileParser::ParseSourceFile(path, errs) };
     if (errs.rdbuf()->in_avail())
     {
         std::cerr << errs.str() << std::endl;
         return;
     }
     m_RuntimeContextPtr->Commands = std::move(commands);
-    // m_RuntimeContextPtr->Labels = std::move(labels);
     _TryFindBeginCommand();
 }
 
 void Executor::LoadFromBinary(const std::string& path)
 {
     std::stringstream errs;
-    auto [commands, labels] = FileParser::ParseBinary(path, errs);
+    auto commands{ FileParser::ParseBinary(path, errs) };
     if (errs.rdbuf()->in_avail())
     {
         std::cerr << errs.str() << std::endl;
         return;
     }
     m_RuntimeContextPtr->Commands = std::move(commands);
-    // m_RuntimeContextPtr->Labels = std::move(labels);
     _TryFindBeginCommand();
 }
 void Executor::ExportToBinary(const std::string& sourcePath,

@@ -412,13 +412,11 @@ FileParser::CleanSourceFile(const std::string& path,
     return result;
 }
 
-std::tuple<CommandBuffer, LabelMap>
-FileParser::ParseSourceFile(const std::string& path,
-                            std::stringstream& errStream,
-                            const std::string& binaryExportPath)
+CommandBuffer FileParser::ParseSourceFile(const std::string& path,
+                                          std::stringstream& errStream,
+                                          const std::string& binaryExportPath)
 {
     CommandBuffer resultCommands;
-    LabelMap resultLabels;
     std::string token;
     int32_t lineNumber{ 0 };
     auto lines{ CleanSourceFile(path, errStream) };
@@ -442,12 +440,6 @@ FileParser::ParseSourceFile(const std::string& path,
         token = internal::StripNextWord(line);
 
         auto commandCodeOpt{ commands::CommandMapping.FindIgnoreCase(token) };
-        if (!commandCodeOpt.has_value()) // label
-        {
-            resultLabels[atoi(token.substr(0, token.size() - 1).c_str())] =
-                resultCommands.size();
-            continue;
-        }
         CommandPtr commandPtr;
         cul::typelist::ForEach<commands::CommandsTypeList,
                                internal::CreateCommandFromCodeVisitor>::
@@ -486,45 +478,21 @@ FileParser::ParseSourceFile(const std::string& path,
 
     if (shouldExport)
     {
-        // for (auto pair : resultLabels)
-        // {
-        //     int8_t labelToken{ -1 };
-        //     binaryFileStream.write(reinterpret_cast<char*>(&labelToken),
-        //                            sizeof(labelToken));
-        //     binaryFileStream.write(reinterpret_cast<const
-        //     char*>(&pair.first),
-        //                            sizeof(pair.first));
-        //     binaryFileStream.write(reinterpret_cast<const
-        //     char*>(&pair.second),
-        //                            sizeof(pair.second));
-        // }
         binaryFileStream.close();
     }
-    return std::make_tuple(resultCommands, resultLabels);
+    return resultCommands;
 }
 
-std::tuple<CommandBuffer, LabelMap>
-FileParser::ParseBinary(const std::string& path, std::stringstream& errStream)
+CommandBuffer FileParser::ParseBinary(const std::string& path,
+                                      std::stringstream& errStream)
 {
     CommandBuffer resultCommands;
-    LabelMap resultLabels;
     std::fstream binaryFileStream;
     binaryFileStream.open(path, std::ios::in | std::ios::binary);
     while (binaryFileStream.rdbuf()->in_avail())
     {
         int8_t code;
         binaryFileStream.read(reinterpret_cast<char*>(&code), sizeof(code));
-        //      if (code == -1) // label
-        //      {
-        //          LabelMap::key_type labelNum;
-        //          binaryFileStream.read(reinterpret_cast<char*>(&labelNum),
-        //                                 sizeof(labelNum));
-        //          LabelMap::mapped_type labelPos;
-        //          binaryFileStream.read(reinterpret_cast<char*>(&labelPos),
-        //                                 sizeof(labelPos));
-        //          resultLabels[labelNum] = labelPos;
-        // continue;
-        //      }
         CommandPtr commandPtr;
         cul::typelist::ForEach<commands::CommandsTypeList,
                                internal::CreateCommandFromCodeVisitor>::
@@ -536,7 +504,7 @@ FileParser::ParseBinary(const std::string& path, std::stringstream& errStream)
         resultCommands.push_back(commandPtr);
     }
     binaryFileStream.close();
-    return std::make_pair(resultCommands, resultLabels);
+    return resultCommands;
 }
 
 } // namespace cpuemul

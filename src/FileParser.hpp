@@ -18,12 +18,12 @@ struct ArgumentConstructionException : std::runtime_error
 class FileParser
 {
 public:
-    static std::tuple<CommandBuffer, LabelMap>
+    static CommandBuffer
     ParseSourceFile(const std::string& path, std::stringstream& errStream,
                     const std::string& binaryExportPath = "");
 
-    static std::tuple<CommandBuffer, LabelMap>
-    ParseBinary(const std::string& path, std::stringstream& errStream);
+    static CommandBuffer ParseBinary(const std::string& path,
+                                     std::stringstream& errStream);
 
     static std::vector<std::string>
     CleanSourceFile(const std::string& path, std::stringstream& errStream);
