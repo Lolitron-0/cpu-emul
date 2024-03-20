@@ -3,3 +3,5 @@ build-qt/
 .vs/
 .cache/
 compile_commands.json
+*.user
+*.user.*
