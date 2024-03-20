@@ -3,10 +3,10 @@
 Tiny interpreter for assembly-like language. 
 \
 \
-By default memory (stack in particular) value type is `int64_t`, to change it iterpreter should be recompiled (see `MemoryValueType` alias). Requirements to this type is to be:
-- _DefaultConstructible_
-- _CopyConstructible_
--  _Constructible from string_ (you can write wrapper for non-trivial types and throw `ArgumentConstructionException` in case of parsing failure)
+By default memory (stack in particular) value type is `int64_t`, to change it iterpreter should be recompiled (see `MemoryValueType` alias). Requirements to this type is to:
+-  be _DefaultConstructible_
+- be _CopyConstructible_
+- be _Constructible from string_ (you can write wrapper for non-trivial types and throw `ArgumentConstructionException` in case of parsing failure)
 -  _Support arithmetic operations_.
 
 Use `-h`/`--help` for usage.
