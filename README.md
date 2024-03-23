@@ -1,4 +1,3 @@
-# АНДРЕЙ НОСОВ НЕ ВИНОВАТ #FREENOSOV
 # cpu-emul
 Tiny interpreter for assembly-like language. 
 \
